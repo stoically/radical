@@ -1,0 +1,6 @@
+node_modules
+yarn.lock
+
+build
+riot-web/*
+web-ext-artifacts

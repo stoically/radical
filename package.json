@@ -1,0 +1,25 @@
+{
+  "name": "riot-webext",
+  "version": "0.0.0",
+  "author": "stoically <stoically@protonmail.com>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "run-s build:riot lint webext:*",
+    "build:riot": "./scripts/build.sh",
+    "webext:clean": "rimraf web-ext-artifacts",
+    "webext:lint": "web-ext lint -s build/firefox",
+    "webext:build": "web-ext build -s build/firefox",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.0",
+    "web-ext": "^4.0.0",
+    "webextension-polyfill": "^0.6.0"
+  },
+  "private": true
+}
