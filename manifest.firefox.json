@@ -2,6 +2,7 @@
   "description": "Decentralised, encrypted chat & collaboration powered by Matrix",
   "manifest_version": 2,
   "name": "Riot",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-MV5DN1ay9JCtHlrkDQp9lxpSsmJSNfTrcCwobIsY9Ks=' 'sha256-1gGaALtpPVJXQMh+bF387CpP/4u0Ol1bYz1SwIVfBR4=' https://www.recaptcha.net https://www.gstatic.com; object-src 'self';",
   "icons": {
     "48": "icons/riot48.png",
     "96": "icons/riot96.png"
