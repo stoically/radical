@@ -2,11 +2,13 @@
   "description": "Decentralised, encrypted chat & collaboration powered by Matrix",
   "manifest_version": 2,
   "name": "Riot",
-  "version": "1.5.7.4",
-  "content_security_policy": "script-src 'self' 'wasm-eval' 'sha256-ZWKVqfentIw4wPkiAvOcNhL1uPCBBzW/YKgVsxfjvQw=' 'sha256-1gGaALtpPVJXQMh+bF387CpP/4u0Ol1bYz1SwIVfBR4='; object-src 'self'",
+  "icons": {
+    "48": "icons/riot48.png",
+    "128": "icons/riot128.png"
+  },
   "browser_action": {
     "default_icon": {
-      "32": "riot/vector-icons/favicon-32x32.png"
+      "32": "icons/riot32.png"
     },
     "default_title": "Riot"
   },

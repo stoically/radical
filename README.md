@@ -53,3 +53,9 @@ yarn is required because it's a hard riot-web build dependency.
 ```
 yarn build
 ```
+
+## Disclaimer
+
+Not an official project from [New Vector](https://vector.im/)! But hopefully WebExtensions get Upstream at some point.
+
+Usage of the Riot icon is [officially permitted](https://matrix.to/#/!xYvNcQPhnkrdUmYczI:matrix.org/$lvRXRVIzCrv7RtFLYQmW5eAqImYQvMHDach_Rr1c6Hg?via=matrix.org&via=feneas.org&via=kde.org).
