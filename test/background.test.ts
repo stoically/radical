@@ -110,7 +110,8 @@ describe("WebExtension", function() {
         sinon.match({
           index: tab.index,
           url: tab.url,
-          windowId: tab.windowId
+          windowId: tab.windowId,
+          hash: undefined
         })
       );
 
