@@ -2,10 +2,11 @@
   "name": "riot-webext",
   "private": true,
   "scripts": {
-    "build": "run-s lint test build:*",
+    "build": "run-s lint test:coverage build:*",
     "build:parcel": "parcel build src/background.ts -d build --no-minify --no-source-maps",
     "test": "ts-mocha test/*.test.ts",
     "test:watch": "npm run test -- --watch",
+    "test:coverage": "nyc npm run test",
     "dist:firefox": "run-s firefox:*",
     "dist:firefox:clean": "rimraf web-ext-artifacts",
     "dist:firefox:lint": "web-ext lint -s riot-web/webext/build/firefox",
@@ -29,6 +30,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "mocha": "^7.0.0",
     "npm-run-all": "^4.1.5",
+    "nyc": "^15.0.0",
     "parcel": "^1.12.4",
     "rimraf": "^3.0.0",
     "sinon": "^8.1.1",
@@ -49,6 +51,15 @@
     "extension": "ts",
     "paths": true,
     "project": "tsconfig.json"
+  },
+  "nyc": {
+    "exclude": [
+      "test/**/*.ts"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ]
   },
   "license": "Apache-2.0"
 }
