@@ -10,4 +10,3 @@ cd riot-web
 yarn install
 cp config.sample.json config.json
 yarn build
-./scripts/webext.sh

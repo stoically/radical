@@ -35,9 +35,29 @@ This doesn't work yet since riot-webext depends on a [riot-web fork](https://git
 
 ## Development
 
+yarn is required to build riot-web.
+
 ```shell
 npm install
+./scripts/build-riot-web.sh
+npm run dev
+```
+
+### Tests
+
+```shell
+# watcher
 npm run test:watch
+
+# once & coverage
+npm run test
+```
+
+### Release
+
+```shell
+npm install
+npm run build
 ```
 
 ## Disclaimer
