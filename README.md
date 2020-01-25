@@ -16,12 +16,12 @@ It's planned to hopefully get WebExtensions support upstreamed at some point.
 ## Security
 
 Riot Web [requires the use of `unsafe-eval`](https://github.com/vector-im/riot-web/issues/3632), so until that changes it's required for the
-WebExtension as well, but since the WebExtension doesn't require any [permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions) it can generally be considered secure. The Riot WebExtension runs as [options page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui).
+WebExtension as well, but since the WebExtension doesn't require any [host permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions) it can generally be considered secure. The Riot WebExtension runs as [options page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui).
 
 
 ### Verify sources
 
-This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'd be possible if the project gets upstreamed.
+This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'll be possible if the project gets upstreamed.
 
 <details>
 <summary>Instructions</summary>
