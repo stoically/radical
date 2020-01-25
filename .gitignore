@@ -1,0 +1,8 @@
+node_modules
+package-lock.json
+yarn.lock
+riot-web
+build
+dist
+.cache
+web-ext-artifacts

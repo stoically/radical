@@ -1,0 +1,5 @@
+[submodule "riot-web"]
+	path = riot-web
+	url = https://github.com/stoically/riot-web.git
+	branch = webext
+	ignore = dirty

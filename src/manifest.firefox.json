@@ -1,0 +1,27 @@
+{
+    "description": "Decentralised, encrypted chat & collaboration powered by Matrix",
+    "manifest_version": 2,
+    "name": "Riot",
+    "version": "1.5.7.6",
+    "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-IErcMDpRiKpRqalGLyv0lbM9dGKqupm0nBJ2naRC5tw=' 'sha256-1gGaALtpPVJXQMh+bF387CpP/4u0Ol1bYz1SwIVfBR4=' https://www.recaptcha.net https://www.gstatic.com; object-src 'self';",
+    "icons": {
+        "48": "vector-icons/riot48.png",
+        "96": "vector-icons/riot96.png"
+    },
+    "browser_action": {
+        "default_icon": {
+            "32": "vector-icons/riot32.png"
+        },
+        "default_title": "Riot"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": ["storage"],
+    "applications": {
+        "gecko": {
+            "id": "@riot-webext",
+            "strict_min_version": "68.0"
+        }
+    }
+}

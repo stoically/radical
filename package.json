@@ -1,0 +1,47 @@
+{
+  "name": "riot-webext",
+  "private": true,
+  "scripts": {
+    "build": "parcel build src/background.ts -d build --no-minify --no-source-maps",
+    "test": "ts-mocha test/*.test.ts",
+    "test:watch": "npm run test -- --watch",
+    "webext:firefox": "run-s webext:firefox:*",
+    "webext:firefox:build": "rimraf web-ext-artifacts && web-ext build -s riot-web/webext/build/firefox"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/firefox-webext-browser": "^70.0.1",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^13.5.0",
+    "@types/sinon": "^7.5.1",
+    "@types/sinon-chai": "^3.2.3",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "mocha": "^7.0.0",
+    "parcel": "^1.12.4",
+    "rimraf": "^3.0.0",
+    "sinon": "^8.1.1",
+    "sinon-chai": "^3.4.0",
+    "ts-mocha": "^6.0.0",
+    "typescript": "^3.7.5",
+    "web-ext": "^4.0.0",
+    "webextension-polyfill": "^0.6.0",
+    "webextensions-api-fake": "^1.1.5"
+  },
+  "browserslist": [
+    "Firefox >= 67",
+    "last 2 Chrome versions"
+  ],
+  "mocha": {
+    "bail": true,
+    "reporter": "progress",
+    "extension": "ts",
+    "paths": true,
+    "project": "tsconfig.json"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,20 @@
+{
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 2018,
+    "project": "./tsconfig.json"
+  },
+  "env": {
+    "browser": true,
+    "webextensions": true,
+    "es6": true
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint"
+  ],
+  "rules": {
+    "@typescript-eslint/unbound-method": ["error"]
+  }
+}
