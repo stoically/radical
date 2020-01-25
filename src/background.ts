@@ -97,12 +97,7 @@ export class Background {
       const tabs = await Promise.all(
         browser.extension
           .getViews()
-          .filter(
-            view =>
-              view.location &&
-              view.location.pathname &&
-              view.location.pathname === this.webappPath
-          )
+          .filter(view => view.location?.pathname === this.webappPath)
           .map(async view => {
             const tab = await view.browser.tabs.getCurrent();
             return {
