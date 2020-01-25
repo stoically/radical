@@ -7,7 +7,7 @@ const { expect } = chai;
 
 import { Background } from "../src/background";
 
-describe.only("WebExtension", function() {
+describe("WebExtension", function() {
   describe("Background", function() {
     beforeEach(function() {
       this.browser = browserFake();

@@ -14,6 +14,8 @@ export class Background {
     browser.browserAction.onClicked.addListener(this.createTab.bind(this));
 
     this.maybeUpdated();
+
+    browser.storage.local.set({ version: this.version });
   }
 
   async handleInstalled(details: {
