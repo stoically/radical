@@ -2,11 +2,17 @@
   "name": "riot-webext",
   "private": true,
   "scripts": {
-    "build": "parcel build src/background.ts -d build --no-minify --no-source-maps",
+    "build": "run-s lint test build:*",
+    "build:parcel": "parcel build src/background.ts -d build --no-minify --no-source-maps",
     "test": "ts-mocha test/*.test.ts",
     "test:watch": "npm run test -- --watch",
-    "webext:firefox": "run-s webext:firefox:*",
-    "webext:firefox:build": "rimraf web-ext-artifacts && web-ext build -s riot-web/webext/build/firefox"
+    "dist:firefox": "run-s firefox:*",
+    "dist:firefox:clean": "rimraf web-ext-artifacts",
+    "dist:firefox:lint": "web-ext lint -s riot-web/webext/build/firefox",
+    "dist:firefox:build": "web-ext build -s riot-web/webext/build/firefox",
+    "lint": "run-p lint:*",
+    "lint:eslint": "eslint **/*.ts",
+    "lint:tsc": "tsc"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
@@ -22,6 +28,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
     "mocha": "^7.0.0",
+    "npm-run-all": "^4.1.5",
     "parcel": "^1.12.4",
     "rimraf": "^3.0.0",
     "sinon": "^8.1.1",
