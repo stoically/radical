@@ -12,6 +12,7 @@ It's planned to hopefully get WebExtensions support upstreamed at some point.
 
 - Riot Web served entirely locally without the need for additional setup
 - Guaranteed Riot Web source files with reduced MITM attack vector
+- Ability to edit Riot Web's "config.json" in the Add-on preferences
 
 ## Security
 
@@ -43,7 +44,13 @@ npm install
 npm run dev
 ```
 
-### Tests
+### Firefox
+
+- Set `security.csp.enable` to `false` via `about:config` - and remember to set to `true` when done
+- Load the build located in `build/firefox` as Temporary Add-on via
+  `about:debugging#/runtime/this-firefox`
+
+## Tests
 
 ```shell
 # watcher
@@ -53,7 +60,7 @@ npm run test:watch
 npm run test
 ```
 
-### Release
+## Release
 
 ```shell
 npm install
