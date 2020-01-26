@@ -2,10 +2,10 @@
   "name": "riot-webext",
   "private": true,
   "scripts": {
-    "build": "run-s lint test:coverage build:*",
+    "build": "run-s build:* test:coverage lint",
     "build:clean": "rimraf build",
-    "build:parcel": "parcel build src/background.ts src/options.html -d build/webext --no-minify --no-source-maps",
     "build:riot-web": "./scripts/build-riot-web.sh",
+    "build:parcel": "parcel build src/background.ts src/options.html -d build/webext --no-minify --no-source-maps",
     "build:copy": "./scripts/build-copy.sh",
     "dev": "run-p dev:*",
     "dev:copy": "nodemon -w src -w riot-web/src --ext '*' --exec \"./scripts/build-copy.sh\" --delay 2s",
