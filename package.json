@@ -11,16 +11,16 @@
     "dev:copy": "nodemon -w src -w riot-web/src --ext '*' --exec \"./scripts/build-copy.sh\" --delay 2s",
     "dev:parcel": "parcel watch src/background.ts src/options.html -d build/webext",
     "dev:riot-web": "cd riot-web && yarn start",
-    "test": "ts-mocha test/*.test.ts",
-    "test:watch": "npm run test -- --watch",
-    "test:coverage": "nyc npm run test",
-    "dist:firefox": "run-s firefox:*",
+    "dist:firefox": "run-s dist:firefox:*",
     "dist:firefox:clean": "rimraf web-ext-artifacts",
     "dist:firefox:lint": "web-ext lint -s build/firefox",
     "dist:firefox:build": "web-ext build -s build/firefox",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint **/*.ts",
-    "lint:tsc": "tsc"
+    "lint:tsc": "tsc",
+    "test": "ts-mocha test/*.test.ts",
+    "test:watch": "npm run test -- --watch",
+    "test:coverage": "nyc npm run test"
   },
   "dependencies": {
     "jsoneditor": "^8.4.1"

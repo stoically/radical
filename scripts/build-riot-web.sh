@@ -8,5 +8,4 @@ git submodule update
 cd riot-web
 ./scripts/fetch-develop.deps.sh --depth 1
 yarn install
-cp config.sample.json config.json
 yarn build
