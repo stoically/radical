@@ -22,7 +22,7 @@ WebExtension as well, but since the WebExtension doesn't require any [host permi
 
 ### Verify sources
 
-This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'll be possible if the project gets upstreamed.
+This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'll be possible if the fork gets upstreamed.
 
 <details>
 <summary>Instructions</summary>
