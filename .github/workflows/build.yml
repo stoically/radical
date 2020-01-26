@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
-          ./scripts/build-release.sh
+          npm run build
