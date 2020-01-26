@@ -1,3 +1,5 @@
+import riotConfigBundled from "../riot-web/config.sample.json";
+
 export class Background {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
@@ -13,9 +15,9 @@ export class Background {
     );
     browser.browserAction.onClicked.addListener(this.createTab.bind(this));
 
-    this.maybeUpdated();
-
     browser.storage.local.set({ version: this.version });
+
+    this.maybeUpdated();
   }
 
   async handleInstalled(details: {
@@ -71,12 +73,17 @@ export class Background {
   }
 
   async handleMessage(message: any): Promise<any> {
+    this.debug("Incoming message", message);
+
     switch (message.method) {
       case "version":
         return this.version;
 
       case "installUpdate":
         return this.installUpdate();
+
+      case "config":
+        return this.getConfig();
     }
   }
 
@@ -121,6 +128,14 @@ export class Background {
       this.debug("updating failed", error.toString());
       throw error;
     }
+  }
+
+  async getConfig(): Promise<any> {
+    const { riotConfigDefault } = await browser.storage.local.get([
+      "riotConfigDefault"
+    ]);
+
+    return riotConfigDefault || riotConfigBundled;
   }
 
   debug(message: any, ...args: any[]): void {

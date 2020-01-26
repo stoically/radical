@@ -4,27 +4,31 @@
   "scripts": {
     "build": "run-s lint test:coverage build:*",
     "build:clean": "rimraf build",
-    "build:parcel": "parcel build src/background.ts -d build/webext --no-minify --no-source-maps",
-    "build:riot": "./scripts/build-riot-web.sh",
+    "build:parcel": "parcel build src/background.ts src/options.html -d build/webext --no-minify --no-source-maps",
+    "build:riot-web": "./scripts/build-riot-web.sh",
     "build:copy": "./scripts/build-copy.sh",
     "dev": "run-p dev:*",
-    "dev:copy": "nodemon -w riot-web/src --exec \"./scripts/build-copy.sh\" --delay 2s",
-    "dev:parcel": "parcel watch src/background.ts -d build/webext",
-    "dev:riot": "cd riot-web && yarn start",
+    "dev:copy": "nodemon -w src -w riot-web/src --ext '*' --exec \"./scripts/build-copy.sh\" --delay 2s",
+    "dev:parcel": "parcel watch src/background.ts src/options.html -d build/webext",
+    "dev:riot-web": "cd riot-web && yarn start",
     "test": "ts-mocha test/*.test.ts",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "nyc npm run test",
     "dist:firefox": "run-s firefox:*",
     "dist:firefox:clean": "rimraf web-ext-artifacts",
-    "dist:firefox:lint": "web-ext lint -s riot-web/webext/build/firefox",
-    "dist:firefox:build": "web-ext build -s riot-web/webext/build/firefox",
+    "dist:firefox:lint": "web-ext lint -s build/firefox",
+    "dist:firefox:build": "web-ext build -s build/firefox",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint **/*.ts",
     "lint:tsc": "tsc"
   },
+  "dependencies": {
+    "jsoneditor": "^8.4.1"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.7",
     "@types/firefox-webext-browser": "^70.0.1",
+    "@types/jsoneditor": "^5.28.2",
     "@types/mocha": "^5.2.7",
     "@types/node": "^13.5.0",
     "@types/sinon": "^7.5.1",
@@ -39,7 +43,8 @@
     "nodemon": "^2.0.2",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.0.0",
-    "parcel": "^1.12.4",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-html-externals": "^0.1.2",
     "rimraf": "^3.0.0",
     "sinon": "^8.1.1",
     "sinon-chai": "^3.4.0",
@@ -68,6 +73,9 @@
       "html",
       "text"
     ]
+  },
+  "externals": {
+    "vendor/**/*": false
   },
   "license": "Apache-2.0"
 }
