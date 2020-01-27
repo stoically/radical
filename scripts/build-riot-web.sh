@@ -8,4 +8,4 @@ git submodule update
 cd riot-web
 ./scripts/fetch-develop.deps.sh --depth 1
 yarn install
-yarn build
+BUILD_TARGET=webext yarn build

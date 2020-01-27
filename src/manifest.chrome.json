@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "Riot",
   "version": "1.5.7.8",
-  "content_security_policy": "script-src 'self' 'wasm-eval' 'sha256-CUGvnIUsO/B3gqJxBcgSft1uXAM8k0mcYssIVoJMgo4=' 'sha256-1gGaALtpPVJXQMh+bF387CpP/4u0Ol1bYz1SwIVfBR4=' https://www.recaptcha.net https://www.gstatic.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'wasm-eval' https://www.recaptcha.net https://www.gstatic.com; object-src 'self'",
   "icons": {
     "48": "vector-icons/riot48.png",
     "128": "vector-icons/riot128.png"

@@ -6,7 +6,7 @@
 - Chrome Store: https://chrome.google.com/webstore/detail/lgpdpggoahhnlmaiompkgghldllldcjh
 - Matrix Room: [#riot-webext:matrix.org](https://matrix.to/#/#riot-webext:matrix)
 
-It's planned to hopefully get WebExtensions support upstreamed at some point.
+It's planned to hopefully get WebExtensions support merged upstream at some point.
 
 ## Features
 
@@ -16,13 +16,12 @@ It's planned to hopefully get WebExtensions support upstreamed at some point.
 
 ## Security
 
-Riot Web [requires the use of `unsafe-eval`](https://github.com/vector-im/riot-web/issues/3632), so until that changes it's required for the
-WebExtension as well, but since the WebExtension doesn't require any [host permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions) it can generally be considered secure. The Riot WebExtension runs as [options page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui).
+The Riot WebExtension doesn't require any [host permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions), so it can be considered similarly secure as Riot Web. In Firefox the Riot Web JavaScript and WASM code is executed as [content script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts) and has only access to [a small subset of the WebExtension APIs](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_scripts#WebExtension_APIs). In Chrome it runs as [options page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui) due to API limitations.
 
 
 ### Verify sources
 
-This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'll be possible if the fork gets upstreamed.
+This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'll be possible if the fork gets merged upstream.
 
 <details>
 <summary>Instructions</summary>
@@ -46,9 +45,12 @@ npm run dev
 
 ### Firefox
 
-- Set `security.csp.enable` to `false` via `about:config` - and remember to set to `true` when done
 - Load the build located in `build/firefox` as Temporary Add-on via
   `about:debugging#/runtime/this-firefox`
+
+### Chrome
+
+- Load the build located in `build/chrome` as Unpacked extension via `chrome://extensions/`
 
 ## Tests
 
@@ -65,6 +67,7 @@ npm run test
 ```shell
 npm install
 npm run build
+npm run dist
 ```
 
 ## Disclaimer
