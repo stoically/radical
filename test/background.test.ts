@@ -19,7 +19,10 @@ describe("WebExtension", function() {
       this.dom = new JSDOM(html);
       this.browser = browserFake();
       this.browser.runtime.getManifest.returns({
-        version: "1.2.3"
+        version: "1.2.3",
+        applications: {
+          gecko: {}
+        }
       });
       this.browser.windows.getAll.resolves([
         { id: this.browser.windows.WINDOW_ID_CURRENT }
@@ -127,6 +130,7 @@ describe("WebExtension", function() {
 
       expect(this.browser.tabs.create).to.have.been.calledOnceWith(
         sinon.match({
+          cookieStoreId: tab.cookieStoreId,
           index: tab.index,
           pinned: tab.pinned,
           url: tab.url,

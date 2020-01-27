@@ -20,7 +20,7 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "permissions": ["storage"],
+  "permissions": ["contextualIdentities", "cookies", "storage"],
   "applications": {
     "gecko": {
       "id": "@riot-webext",
