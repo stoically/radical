@@ -1,5 +1,12 @@
 import riotConfigBundled from "../riot-web/config.sample.json";
 
+declare global {
+  interface Window {
+    background: Background;
+    vector_indexeddb_worker_script: string;
+  }
+}
+
 export class Background {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
