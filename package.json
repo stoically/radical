@@ -16,7 +16,7 @@
     "dev:copy": "./scripts/copy-assets.sh && nodemon -w src --ext '*' --exec \"./scripts/copy-assets.sh\"",
     "dev:firefox": "npm run parcel:watch -- -d build/firefox --cache-dir .cache/firefox",
     "dev:chrome": "npm run parcel:watch -- -d build/chrome --cache-dir .cache/chrome",
-    "dev:riot-web": "cd riot-web && yarn install && BUILD_TARGET=webext yarn start",
+    "dev:riot-web": "cd riot-web && BUILD_TARGET=webext yarn start",
     "parcel:build": "parcel build src/background.ts src/riot-web.ts src/options.html --no-minify --no-source-maps --no-cache",
     "parcel:watch": "parcel watch src/background.ts src/riot-web.ts src/options.html --no-hmr",
     "dist": "run-p dist:*",

@@ -1,4 +1,11 @@
+// TODO: replace with `import type` once typescript 3.8 lands
 import JSONEditor, { JSONEditorOptions } from "jsoneditor";
+
+declare global {
+  interface Window {
+    JSONEditor: typeof JSONEditor;
+  }
+}
 
 const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
   const config = await browser.runtime.sendMessage({ method: "config" });
@@ -14,7 +21,7 @@ const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
     mode: "code",
     modes: ["code", "form", "text", "tree", "view"]
   };
-  const editor = new JSONEditor(container, options);
+  const editor = new window.JSONEditor(container, options);
   await setConfigEditor(editor);
 
   const message = document.getElementById("message");

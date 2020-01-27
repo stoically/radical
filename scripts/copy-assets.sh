@@ -19,5 +19,5 @@ cp LICENSE build/chrome
 cp node_modules/webextension-polyfill/dist/browser-polyfill.min.js build/chrome
 rm -f build/chrome/riot/manifest.json
 mkdir -p build/chrome/vendor/jsoneditor
-cp node_modules/jsoneditor/dist/jsoneditor.min.css build/chrome/vendor/jsoneditor
+cp node_modules/jsoneditor/dist/jsoneditor.min.* build/chrome/vendor/jsoneditor
 cp -r node_modules/jsoneditor/dist/img build/chrome/vendor/jsoneditor
