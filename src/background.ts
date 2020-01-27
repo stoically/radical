@@ -71,9 +71,13 @@ export class Background {
           if (windowIds.includes(tab.windowId)) {
             return browser.tabs.create(tab);
           } else {
-            return browser.windows.create({
+            const createData: { url: string; cookieStoreId?: string } = {
               url: tab.url
-            });
+            };
+            if (this.browser === "firefox") {
+              createData.cookieStoreId = tab.cookieStoreId;
+            }
+            return browser.windows.create(createData);
           }
         })
       );

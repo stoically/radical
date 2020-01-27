@@ -219,6 +219,7 @@ describe("WebExtension", function() {
 
       expect(this.browser.windows.create).to.have.been.calledOnceWith(
         sinon.match({
+          cookieStoreId: tab.cookieStoreId,
           url: tab.url
         })
       );
