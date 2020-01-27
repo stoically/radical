@@ -13,6 +13,17 @@ const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
 };
 
 (async (): Promise<void> => {
+  if (typeof browser === "undefined") {
+    // move into options.html and use some sort of templating
+    await new Promise(resolve => {
+      const script = document.createElement("script");
+      script.src = "/browser-polyfill.min.js";
+      script.async = true;
+      script.onload = resolve;
+      document.body.append(script);
+    });
+  }
+
   const container = document.getElementById("jsoneditor");
   if (!container) {
     return;
