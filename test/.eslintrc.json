@@ -1,5 +1,8 @@
 {
   "env": {
     "node": true
+  },
+  "rules": {
+    "no-restricted-globals": ["error", "browser"]
   }
 }

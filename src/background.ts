@@ -11,6 +11,7 @@ export class Background {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
   public version = this.manifest.version;
+  public activeTabs: { tabId: number; hash: string }[] = [];
 
   constructor() {
     this.debug("Initializing");
@@ -89,6 +90,13 @@ export class Background {
       case "installUpdate":
         return this.installUpdate();
 
+      case "activeTab":
+        this.activeTabs.push({
+          tabId: message.tabId,
+          hash: message.hash
+        });
+        return;
+
       case "config":
         return this.getConfig();
     }
@@ -108,19 +116,24 @@ export class Background {
 
   async installUpdate(): Promise<void> {
     try {
+      this.activeTabs = [];
+      await browser.runtime.sendMessage({ method: "activeTabs" });
+
+      // give tabs 500ms to respond
+      // workaround for sendMessage not supporting multiple return messages
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       const tabs = await Promise.all(
-        browser.extension
-          .getViews({ type: "tab" })
-          .filter(view => view.location?.pathname === this.webappPath)
-          .map(async view => {
-            const tab = await view.browser.tabs.getCurrent();
-            return {
-              index: tab.index,
-              pinned: tab.pinned,
-              hash: view.location.hash,
-              windowId: tab.windowId
-            };
-          })
+        this.activeTabs.map(async ({ tabId, hash }) => {
+          const tab = await browser.tabs.get(tabId);
+
+          return {
+            index: tab.index,
+            pinned: tab.pinned,
+            windowId: tab.windowId,
+            hash
+          };
+        })
       );
 
       await browser.storage.local.set({
@@ -130,6 +143,7 @@ export class Background {
         }
       });
 
+      this.activeTabs = [];
       browser.runtime.reload();
     } catch (error) {
       this.debug("updating failed", error.toString());

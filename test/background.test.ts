@@ -1,3 +1,4 @@
+import { JSDOM } from "jsdom";
 import browserFake from "webextensions-api-fake";
 import sinon from "sinon";
 import chai from "chai";
@@ -6,10 +7,16 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 import { Background } from "../src/background";
+import { initialize as riotWebInitialize } from "../src/riot-web";
+
+const html =
+  '<!doctype html><html><head><meta charset="utf-8">' +
+  "</head><body></body></html>";
 
 describe("WebExtension", function() {
   describe("Background", function() {
     beforeEach(function() {
+      this.dom = new JSDOM(html);
       this.browser = browserFake();
       this.browser.runtime.getManifest.returns({
         version: "1.2.3"
@@ -17,10 +24,25 @@ describe("WebExtension", function() {
       this.browser.windows.getAll.resolves([
         { id: this.browser.windows.WINDOW_ID_CURRENT }
       ]);
+      this.browser.runtime.sendMessage.callsFake((...args) => {
+        this.browser.runtime.onMessage.addListener.yield(...args);
+      });
+      this.clock = sinon.useFakeTimers();
 
       global.browser = this.browser;
-      global.window = {};
+      global.window = this.dom.window;
+      global.window.location.hash = "#/welcome";
       this.background = new Background();
+    });
+
+    afterEach(function() {
+      this.browser.sinonSandbox.reset();
+      this.clock.restore();
+
+      delete global.window;
+      delete global.browser;
+      delete this.dom;
+      delete this.browser;
     });
 
     it("should register event listeners", function() {
@@ -80,25 +102,22 @@ describe("WebExtension", function() {
         any
       >[];
       const tab = await tabPromise;
-      const hash = "#/welcome";
-      await browser.tabs.update(tab.id, { url: tab.url + hash });
+      await this.browser.tabs.update(tab.id, {
+        url: tab.url + window.location.hash
+      });
 
       this.browser.tabs.getCurrent.resolves(tab);
-      this.browser.extension.getViews.returns([
-        {
-          location: {
-            pathname: this.background.webappPath,
-            hash
-          },
-          browser: this.browser
-        }
-      ]);
+      await riotWebInitialize();
 
       const [
         messagePromise
       ] = (this.browser.runtime.onMessage.addListener.yield({
         method: "installUpdate"
       }) as unknown) as Promise<any>[];
+
+      await new Promise(resolve => process.nextTick(resolve));
+      this.clock.runAll();
+
       await messagePromise;
       expect(this.browser.runtime.reload).to.have.been.calledOnce;
 
@@ -109,6 +128,7 @@ describe("WebExtension", function() {
       expect(this.browser.tabs.create).to.have.been.calledOnceWith(
         sinon.match({
           index: tab.index,
+          pinned: tab.pinned,
           url: tab.url,
           windowId: tab.windowId,
           hash: undefined
@@ -168,25 +188,24 @@ describe("WebExtension", function() {
         any
       >[];
       const tab = await tabPromise;
-      const hash = "#/welcome";
-      await browser.tabs.update(tab.id, { url: tab.url + hash });
+      await this.browser.tabs.update(tab.id, {
+        url: tab.url + window.location.hash
+      });
 
       this.browser.tabs.getCurrent.resolves(tab);
-      this.browser.extension.getViews.returns([
-        {
-          location: {
-            pathname: this.background.webappPath,
-            hash
-          },
-          browser: this.browser
-        }
-      ]);
+      await riotWebInitialize();
+
+      this.browser.tabs.getCurrent.resolves(tab);
 
       const [
         messagePromise
       ] = (this.browser.runtime.onMessage.addListener.yield({
         method: "installUpdate"
       }) as unknown) as Promise<any>[];
+
+      await new Promise(resolve => process.nextTick(resolve));
+      this.clock.runAll();
+
       await messagePromise;
 
       this.browser.sinonSandbox.resetHistory();
