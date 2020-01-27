@@ -3,9 +3,7 @@
 set -ex
 
 # firefox
-rm -rf build/firefox
-cp -r build/webext build/firefox
-cp -r riot-web/webapp build/firefox/riot
+mkdir -p build/firefox
 cp src/manifest.firefox.json build/firefox/manifest.json
 cp -r src/vector-icons build/firefox
 cp LICENSE build/firefox
@@ -13,11 +11,8 @@ mkdir -p build/firefox/vendor/jsoneditor
 cp node_modules/jsoneditor/dist/jsoneditor.min.css build/firefox/vendor/jsoneditor
 cp -r node_modules/jsoneditor/dist/img build/firefox/vendor/jsoneditor
 
-
 # chrome
-rm -rf build/chrome
-cp -r build/webext build/chrome
-cp -r riot-web/webapp build/chrome/riot
+mkdir -p build/chrome
 cp src/manifest.chrome.json build/chrome/manifest.json
 cp -r src/vector-icons build/chrome
 cp LICENSE build/chrome
