@@ -7,7 +7,9 @@ declare global {
   namespace NodeJS {
     interface Global {
       browser: BrowserFake;
-      window: any;
+      window: Window;
+      document: any;
+      chrome: any;
     }
   }
 

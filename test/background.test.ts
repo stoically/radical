@@ -1,13 +1,18 @@
 import { JSDOM } from "jsdom";
-import browserFake from "webextensions-api-fake";
+import browserFake, { BrowserFake } from "webextensions-api-fake";
+import { ImportMock } from "ts-mock-imports";
 import sinon from "sinon";
 import chai from "chai";
 import sinonChai from "sinon-chai";
 chai.use(sinonChai);
 const { expect } = chai;
 
+import * as utils from "../src/utils";
+const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
+injectScriptStub.resolves();
+
 import { Background } from "../src/background";
-import { initialize as riotWebInitialize } from "../src/riot-web";
+import { initialize as riotInitialize } from "../src/riot";
 
 const html =
   '<!doctype html><html><head><meta charset="utf-8">' +
@@ -27,14 +32,28 @@ describe("WebExtension", function() {
       this.browser.windows.getAll.resolves([
         { id: this.browser.windows.WINDOW_ID_CURRENT }
       ]);
-      this.browser.runtime.sendMessage.callsFake((...args) => {
-        this.browser.runtime.onMessage.addListener.yield(...args);
-      });
+
+      this.riotInitializeScript = async (): Promise<BrowserFake> => {
+        const riotBrowser = browserFake();
+        await riotInitialize(riotBrowser);
+        this.browser.runtime.sendMessage.callsFake((...args) => {
+          riotBrowser.runtime.onMessage.addListener.yield(...args);
+        });
+        riotBrowser.runtime.sendMessage.callsFake((...args) => {
+          this.browser.runtime.onMessage.addListener.yield(...args);
+        });
+
+        return riotBrowser;
+      };
+
       this.clock = sinon.useFakeTimers();
 
-      global.browser = this.browser;
+      global.browser = global.chrome = this.browser;
       global.window = this.dom.window;
       global.window.location.hash = "#/welcome";
+      global.document = this.dom.window.document;
+      global.document.createElement = sinon.stub().resolves();
+
       this.background = new Background();
     });
 
@@ -44,6 +63,7 @@ describe("WebExtension", function() {
 
       delete global.window;
       delete global.browser;
+      delete global.chrome;
       delete this.dom;
       delete this.browser;
     });
@@ -109,8 +129,8 @@ describe("WebExtension", function() {
         url: tab.url + window.location.hash
       });
 
-      this.browser.tabs.getCurrent.resolves(tab);
-      await riotWebInitialize();
+      const riotScriptBrowser = await this.riotInitializeScript();
+      riotScriptBrowser.tabs.getCurrent.resolves(tab);
 
       const [
         messagePromise
@@ -196,10 +216,8 @@ describe("WebExtension", function() {
         url: tab.url + window.location.hash
       });
 
-      this.browser.tabs.getCurrent.resolves(tab);
-      await riotWebInitialize();
-
-      this.browser.tabs.getCurrent.resolves(tab);
+      const riotScriptBrowser = await this.riotInitializeScript();
+      riotScriptBrowser.tabs.getCurrent.resolves(tab);
 
       const [
         messagePromise

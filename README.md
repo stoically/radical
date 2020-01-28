@@ -16,7 +16,7 @@ It's planned to hopefully get WebExtensions support merged upstream at some poin
 
 ## Security
 
-The Riot WebExtension doesn't require any [host permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions), so it can be considered similarly secure as Riot Web. In Firefox the Riot Web JavaScript and WASM code is executed as [content script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts) and has only access to [a small subset of the WebExtension APIs](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Content_scripts#WebExtension_APIs). In Chrome it runs as [options page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/options_ui) due to API limitations.
+The Riot WebExtension doesn't require any [host permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions) and runs as [extension page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Extension_pages) with access to only a small subset of the WebExtensions API.
 
 
 ### Verify sources

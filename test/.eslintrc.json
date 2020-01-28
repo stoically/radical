@@ -3,6 +3,6 @@
     "node": true
   },
   "rules": {
-    "no-restricted-globals": ["error", "browser"]
+    "no-restricted-globals": ["error", "browser", "chrome"]
   }
 }
