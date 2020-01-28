@@ -50,6 +50,8 @@ describe("WebExtension", function() {
 
       global.browser = global.chrome = this.browser;
       global.window = this.dom.window;
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      global.window.__riot_test__ = true;
       global.window.location.hash = "#/welcome";
       global.document = this.dom.window.document;
       global.document.createElement = sinon.stub().resolves();

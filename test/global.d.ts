@@ -13,6 +13,10 @@ declare global {
     }
   }
 
+  interface Window {
+    __riot_test__: boolean;
+  }
+
   namespace Mocha {
     interface Context {
       browser: BrowserFake;

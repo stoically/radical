@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { injectScript } from "./utils";
 
-export const initialize = async (browser: any): Promise<void> => {
+export const initialize = async (browserFake?: any): Promise<void> => {
+  if (browserFake) {
+    // @ts-ignore
+    browser = browserFake;
+  }
+
   if (typeof browser === "undefined") {
     await injectScript("/browser-polyfill.min.js");
   }
 
   // remove all browser APIs that aren't needed here or in riot's WebExtensionPlatform
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  browser = chrome = {
+  browser = {
     runtime: {
       sendMessage: browser.runtime.sendMessage,
       onMessage: browser.runtime.onMessage
@@ -17,6 +22,8 @@ export const initialize = async (browser: any): Promise<void> => {
       getCurrent: browser.tabs.getCurrent
     }
   };
+  // @ts-ignore
+  chrome = null;
 
   // listener for messages from background
   browser.runtime.onMessage.addListener((message: any) => {
@@ -55,6 +62,6 @@ export const initialize = async (browser: any): Promise<void> => {
   );
 };
 
-if (typeof browser !== "undefined" || typeof chrome !== "undefined") {
-  initialize(browser);
+if (!window.__riot_test__) {
+  initialize();
 }
