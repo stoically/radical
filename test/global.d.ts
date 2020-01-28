@@ -20,6 +20,7 @@ declare global {
   namespace Mocha {
     interface Context {
       browser: BrowserFake;
+      riotBrowser: BrowserFake;
       background: Background;
       dom: JSDOM;
       clock: sinon.SinonFakeTimers;

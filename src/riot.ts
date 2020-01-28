@@ -1,30 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { injectScript } from "./utils";
 
-export const initialize = async (browserFake?: any): Promise<void> => {
-  if (browserFake) {
-    // @ts-ignore
-    browser = browserFake;
-  }
-
-  if (typeof browser === "undefined") {
-    await injectScript("/browser-polyfill.min.js");
-  }
-
-  // remove all browser APIs that aren't needed here or in riot's WebExtensionPlatform
-  // @ts-ignore
-  browser = {
-    runtime: {
-      sendMessage: browser.runtime.sendMessage,
-      onMessage: browser.runtime.onMessage
-    },
-    tabs: {
-      getCurrent: browser.tabs.getCurrent
-    }
-  };
-  // @ts-ignore
-  chrome = null;
-
+export const listener = (browser: any): void => {
   // listener for messages from background
   browser.runtime.onMessage.addListener((message: any) => {
     console.log("[WebExtension Initializer] Incoming message", message);
@@ -53,7 +30,25 @@ export const initialize = async (browserFake?: any): Promise<void> => {
     // always return false or we might handle message meant for background
     return false;
   });
+};
 
+export const sanitize = (): void => {
+  // remove all browser APIs that aren't needed here or in riot's WebExtensionPlatform
+  // @ts-ignore
+  browser = {
+    runtime: {
+      sendMessage: browser.runtime.sendMessage,
+      onMessage: browser.runtime.onMessage
+    },
+    tabs: {
+      getCurrent: browser.tabs.getCurrent
+    }
+  };
+  // @ts-ignore
+  chrome = null;
+};
+
+export const run = async (): Promise<void> => {
   // run riot
   // eslint-disable-next-line @typescript-eslint/camelcase
   window.vector_indexeddb_worker_script = "bundles/webext/indexeddb-worker.js";
@@ -62,6 +57,16 @@ export const initialize = async (browserFake?: any): Promise<void> => {
   );
 };
 
-if (!window.__riot_test__) {
+export const initialize = async (): Promise<void> => {
+  if (typeof browser === "undefined") {
+    await injectScript("/browser-polyfill.min.js");
+  }
+
+  sanitize();
+  listener(browser);
+  return run();
+};
+
+if (typeof window !== "undefined") {
   initialize();
 }

@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import browserFake, { BrowserFake } from "webextensions-api-fake";
+import browserFake from "webextensions-api-fake";
 import { ImportMock } from "ts-mock-imports";
 import sinon from "sinon";
 import chai from "chai";
@@ -12,16 +12,30 @@ const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
 injectScriptStub.resolves();
 
 import { Background } from "../src/background";
-import { initialize as riotInitialize } from "../src/riot";
+import { listener } from "../src/riot";
 
 const html =
   '<!doctype html><html><head><meta charset="utf-8">' +
   "</head><body></body></html>";
 
+// [
+//   "firefox",
+//   "chrome"
+// ].map(browserType => {});
+
 describe("WebExtension", function() {
   describe("Background", function() {
-    beforeEach(function() {
+    beforeEach(async function() {
       this.dom = new JSDOM(html);
+      this.clock = sinon.useFakeTimers();
+      global.window = this.dom.window;
+      global.window.location.hash = "#/welcome";
+      global.document = this.dom.window.document;
+      global.document.createElement = sinon.stub().resolves();
+
+      this.riotBrowser = browserFake();
+      listener(this.riotBrowser);
+
       this.browser = browserFake();
       this.browser.runtime.getManifest.returns({
         version: "1.2.3",
@@ -32,35 +46,19 @@ describe("WebExtension", function() {
       this.browser.windows.getAll.resolves([
         { id: this.browser.windows.WINDOW_ID_CURRENT }
       ]);
-
-      this.riotInitializeScript = async (): Promise<BrowserFake> => {
-        const riotBrowser = browserFake();
-        await riotInitialize(riotBrowser);
-        this.browser.runtime.sendMessage.callsFake((...args) => {
-          riotBrowser.runtime.onMessage.addListener.yield(...args);
-        });
-        riotBrowser.runtime.sendMessage.callsFake((...args) => {
-          this.browser.runtime.onMessage.addListener.yield(...args);
-        });
-
-        return riotBrowser;
-      };
-
-      this.clock = sinon.useFakeTimers();
-
-      global.browser = global.chrome = this.browser;
-      global.window = this.dom.window;
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      global.window.__riot_test__ = true;
-      global.window.location.hash = "#/welcome";
-      global.document = this.dom.window.document;
-      global.document.createElement = sinon.stub().resolves();
-
+      this.browser.runtime.sendMessage.callsFake((...args) => {
+        this.riotBrowser.runtime.onMessage.addListener.yield(...args);
+      });
+      this.riotBrowser.runtime.sendMessage.callsFake((...args) => {
+        this.browser.runtime.onMessage.addListener.yield(...args);
+      });
+      global.browser = this.browser;
       this.background = new Background();
     });
 
     afterEach(function() {
       this.browser.sinonSandbox.reset();
+      this.riotBrowser.sinonSandbox.reset();
       this.clock.restore();
 
       delete global.window;
@@ -68,6 +66,7 @@ describe("WebExtension", function() {
       delete global.chrome;
       delete this.dom;
       delete this.browser;
+      delete this.riotBrowser;
     });
 
     it("should register event listeners", function() {
@@ -131,8 +130,7 @@ describe("WebExtension", function() {
         url: tab.url + window.location.hash
       });
 
-      const riotScriptBrowser = await this.riotInitializeScript();
-      riotScriptBrowser.tabs.getCurrent.resolves(tab);
+      this.riotBrowser.tabs.getCurrent.resolves(tab);
 
       const [
         messagePromise
@@ -218,8 +216,7 @@ describe("WebExtension", function() {
         url: tab.url + window.location.hash
       });
 
-      const riotScriptBrowser = await this.riotInitializeScript();
-      riotScriptBrowser.tabs.getCurrent.resolves(tab);
+      this.riotBrowser.tabs.getCurrent.resolves(tab);
 
       const [
         messagePromise

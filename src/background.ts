@@ -11,11 +11,11 @@ export class Background {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
   public version = this.manifest.version;
-  public browser = this.manifest.applications?.gecko ? "firefox" : "chrome";
+  public browserType = this.manifest.applications?.gecko ? "firefox" : "chrome";
   public activeTabs: { tabId: number; hash: string }[] = [];
 
   constructor() {
-    this.debug("Initializing", this.browser);
+    this.debug("Initializing. Browser:", this.browserType);
 
     browser.runtime.onInstalled.addListener(this.handleInstalled.bind(this));
     browser.runtime.onMessage.addListener(this.handleMessage.bind(this));
@@ -64,7 +64,7 @@ export class Background {
             delete tab.hash;
           }
 
-          if (this.browser !== "firefox") {
+          if (this.browserType !== "firefox") {
             delete tab.cookieStoreId;
           }
 
@@ -74,7 +74,7 @@ export class Background {
             const createData: { url: string; cookieStoreId?: string } = {
               url: tab.url
             };
-            if (this.browser === "firefox") {
+            if (this.browserType === "firefox") {
               createData.cookieStoreId = tab.cookieStoreId;
             }
             return browser.windows.create(createData);
@@ -142,7 +142,7 @@ export class Background {
             windowId: tab.windowId,
             hash,
             cookieStoreId:
-              this.browser === "firefox" ? tab.cookieStoreId : false
+              this.browserType === "firefox" ? tab.cookieStoreId : false
           };
         })
       );
@@ -175,6 +175,6 @@ export class Background {
   }
 }
 
-if (typeof browser !== "undefined") {
+if (typeof window !== "undefined") {
   window.background = new Background();
 }
