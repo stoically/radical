@@ -1,5 +1,9 @@
 # Riot WebExtension
 
+![Build Status](https://github.com/riot-webext/stoically/workflows/build/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/stoically/riot-webext/badge.svg?branch=master)](https://coveralls.io/github/stoically/riot-webext?branch=master)
+[![Riot Web Version](https://img.shields.io/badge/Riot%20Web%20Version-1.5.8-success)](https://github.com/vector-im/riot-web/releases)
+
 [Riot Web](https://github.com/vector-im/riot-web) bundled as WebExtension.
 
 - Firefox AMO: https://addons.mozilla.org/firefox/addon/riot/
