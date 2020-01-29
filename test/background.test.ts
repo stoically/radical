@@ -18,13 +18,25 @@ const html =
   '<!doctype html><html><head><meta charset="utf-8">' +
   "</head><body></body></html>";
 
-// [
-//   "firefox",
-//   "chrome"
-// ].map(browserType => {});
+const browserManifest = (browserType: string): any => {
+  switch (browserType) {
+    case "firefox":
+      return {
+        version: "1.2.3",
+        applications: {
+          gecko: {}
+        }
+      };
 
-describe("WebExtension", function() {
-  describe("Background", function() {
+    case "chrome":
+      return { version: "1.2.3" };
+  }
+};
+
+["firefox", "chrome"].map(browserType => {
+  const manifest = browserManifest(browserType);
+
+  describe(`WebExtension Background: ${browserType}`, function() {
     beforeEach(async function() {
       this.dom = new JSDOM(html);
       this.clock = sinon.useFakeTimers();
@@ -37,12 +49,7 @@ describe("WebExtension", function() {
       listener(this.riotBrowser);
 
       this.browser = browserFake();
-      this.browser.runtime.getManifest.returns({
-        version: "1.2.3",
-        applications: {
-          gecko: {}
-        }
-      });
+      this.browser.runtime.getManifest.returns(manifest);
       this.browser.windows.getAll.resolves([
         { id: this.browser.windows.WINDOW_ID_CURRENT }
       ]);
@@ -150,7 +157,8 @@ describe("WebExtension", function() {
 
       expect(this.browser.tabs.create).to.have.been.calledOnceWith(
         sinon.match({
-          cookieStoreId: tab.cookieStoreId,
+          cookieStoreId:
+            browserType === "firefox" ? tab.cookieStoreId : undefined,
           index: tab.index,
           pinned: tab.pinned,
           url: tab.url,
@@ -236,7 +244,8 @@ describe("WebExtension", function() {
 
       expect(this.browser.windows.create).to.have.been.calledOnceWith(
         sinon.match({
-          cookieStoreId: tab.cookieStoreId,
+          cookieStoreId:
+            browserType === "firefox" ? tab.cookieStoreId : undefined,
           url: tab.url
         })
       );
