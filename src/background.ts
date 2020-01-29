@@ -1,4 +1,5 @@
 import riotConfigBundled from "../riot-web/config.sample.json";
+import { Log, log } from "./log";
 
 declare global {
   interface Window {
@@ -7,7 +8,7 @@ declare global {
   }
 }
 
-export class Background {
+export class Background extends Log {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
   public version = this.manifest.version;
@@ -15,7 +16,8 @@ export class Background {
   public activeTabs: { tabId: number; hash: string }[] = [];
 
   constructor() {
-    this.debug("Initializing. Browser:", this.browserType);
+    super();
+    this.debug("constructor", "Browser:", this.browserType);
 
     browser.runtime.onInstalled.addListener(this.handleInstalled.bind(this));
     browser.runtime.onMessage.addListener(this.handleMessage.bind(this));
@@ -168,10 +170,6 @@ export class Background {
     ]);
 
     return riotConfigDefault || riotConfigBundled;
-  }
-
-  debug(message: any, ...args: any[]): void {
-    console.log(`[WebExtension Background] ${message}`, ...args);
   }
 }
 
