@@ -21,6 +21,7 @@
     "scripts": ["background.js"]
   },
   "permissions": ["contextualIdentities", "cookies", "storage"],
+  "optional_permissions": ["webRequest", "<all_urls>"],
   "applications": {
     "gecko": {
       "id": "@riot-webext",

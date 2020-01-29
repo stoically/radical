@@ -1,5 +1,6 @@
 import riotConfigBundled from "../riot-web/config.sample.json";
-import { Log, log } from "./log";
+import { Log, log, Logger } from "./log";
+import { webRequestOnHeadersReceivedCallbackDetails } from "./types-browser.js";
 
 declare global {
   interface Window {
@@ -8,7 +9,7 @@ declare global {
   }
 }
 
-export class Background extends Log {
+export class Background extends Logger {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
   public version = this.manifest.version;
@@ -26,9 +27,35 @@ export class Background extends Log {
     );
     browser.browserAction.onClicked.addListener(this.createTab.bind(this));
 
+    browser.webRequest.onHeadersReceived.addListener(
+      this.handleMozillaSSO.bind(this),
+      { urls: ["https://mozilla.modular.im/_matrix/saml2/*"] },
+      ["responseHeaders"]
+    );
+
     browser.storage.local.set({ version: this.version });
 
     this.maybeUpdated();
+  }
+
+  @log
+  async handleMozillaSSO(
+    details: webRequestOnHeadersReceivedCallbackDetails,
+    log?: Log
+  ): Promise<browser.webRequest.BlockingResponse> {
+    log?.debug(details);
+
+    const location = details.responseHeaders?.find(
+      responseHeader => responseHeader.name.toLowerCase() === "location"
+    );
+
+    if (!location) {
+      log?.debug("no location");
+      return {};
+    }
+
+    await browser.tabs.update(details.tabId, { url: location.value });
+    return {};
   }
 
   async handleInstalled(details: {
@@ -124,7 +151,7 @@ export class Background extends Log {
     this.version = details.version;
   }
 
-  createTab(): Promise<browser.tabs.Tab> {
+  async createTab(): Promise<browser.tabs.Tab> {
     this.debug("Creating riot tab");
     return browser.tabs.create({
       url: this.webappPath

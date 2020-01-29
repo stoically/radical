@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export function log(
   target: Log,
   propertyName: string,
@@ -18,8 +20,12 @@ export function log(
   return propertyDesciptor;
 }
 
-export class Log {
+export interface Log {
+  debug: (...args: any[]) => void;
+}
+
+export class Logger {
   debug(scope: string, ...args: any[]): void {
-    console.log(`${this.constructor.name}::${scope}:`, ...args);
+    console.log(`WebExtension::${this.constructor.name}::${scope}:`, ...args);
   }
 }

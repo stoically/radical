@@ -30,7 +30,10 @@
     "lint:tsc": "tsc",
     "test": "ts-mocha test/*.test.ts",
     "test:watch": "npm run test -- --watch",
-    "test:coverage": "nyc npm run test"
+    "test:watch:firefox": "BROWSER_TYPE=firefox npm run test -- --watch",
+    "test:coverage": "nyc npm run test",
+    "web-ext:run": "web-ext run -s build/firefox",
+    "web-ext:dev": "npm run web-ext:run -- -f firefox-dev"
   },
   "dependencies": {
     "jsoneditor": "^8.4.1"
