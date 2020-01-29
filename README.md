@@ -1,6 +1,6 @@
 # Riot WebExtension
 
-![Build Status](https://github.com/riot-webext/stoically/workflows/build/badge.svg)
+![Build Status](https://github.com/stoically/riot-webext/workflows/build/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/stoically/riot-webext/badge.svg?branch=master)](https://coveralls.io/github/stoically/riot-webext?branch=master)
 [![Riot Web Version](https://img.shields.io/badge/Riot%20Web%20Version-1.5.8-success)](https://github.com/vector-im/riot-web/releases)
 
@@ -8,34 +8,15 @@
 
 - Firefox AMO: https://addons.mozilla.org/firefox/addon/riot/
 - Chrome Store: https://chrome.google.com/webstore/detail/lgpdpggoahhnlmaiompkgghldllldcjh
-- Matrix Room: [#riot-webext:matrix.org](https://matrix.to/#/#riot-webext:matrix)
+- Matrix Room: [#riot-webext:matrix.org](https://matrix.to/#/#riot-webext:matrix.org)
 
 It's planned to hopefully get WebExtensions support merged upstream at some point.
 
 ## Features
 
 - Riot Web served entirely locally without the need for additional setup
-- Guaranteed Riot Web source files with reduced MITM attack vector
 - Ability to edit Riot Web's "config.json" in the Add-on preferences
 
-## Security
-
-The Riot WebExtension doesn't require any [host permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions) by default and runs as [extension page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Extension_pages).
-
-
-### Verify sources
-
-This doesn't work yet since riot-webext depends on a [riot-web fork](https://github.com/stoically/riot-web). It'll be possible if the fork gets merged upstream.
-
-<details>
-<summary>Instructions</summary>
-
--   Download [matching release from riot-web](https://github.com/vector-im/riot-web/releases) and extract its content into a folder named `riot-web` using `tar xzf`
--   Download the Add-on itself and extract its content into a folder named `riot-webext` using `unzip`
--   Compare the sha256sums by running `[[ $(cd riot-web && find . -type f \( -exec sha256sum {} \; \) | sha256sum) == $(cd riot-webext/riot && find . -type f \( -exec sha256sum {} \; \) | sha256sum) ]] && echo "OK" || echo "sha256sums do not match!"`
--   Responds with `OK` if the sha256sums match
-
-</details>
 
 ## Development
 
