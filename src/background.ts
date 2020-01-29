@@ -1,6 +1,6 @@
 import riotConfigBundled from "../riot-web/config.sample.json";
-import { Log, log, Logger } from "./log";
 import { webRequestOnHeadersReceivedCallbackDetails } from "./types-browser.js";
+import { Logger } from "./log";
 
 declare global {
   interface Window {
@@ -18,7 +18,7 @@ export class Background extends Logger {
 
   constructor() {
     super();
-    this.debug("constructor", "Browser:", this.browserType);
+    this.logger("constructor").debug("Browser:", this.browserType);
 
     browser.runtime.onInstalled.addListener(this.handleInstalled.bind(this));
     browser.runtime.onMessage.addListener(this.handleMessage.bind(this));
@@ -38,19 +38,18 @@ export class Background extends Logger {
     this.maybeUpdated();
   }
 
-  @log
   async handleMozillaSSO(
-    details: webRequestOnHeadersReceivedCallbackDetails,
-    log?: Log
+    details: webRequestOnHeadersReceivedCallbackDetails
   ): Promise<browser.webRequest.BlockingResponse> {
-    log?.debug(details);
+    const { debug } = this.logger("handleMozillaSSO");
+    debug(details);
 
     const location = details.responseHeaders?.find(
       responseHeader => responseHeader.name.toLowerCase() === "location"
     );
 
     if (!location) {
-      log?.debug("no location");
+      debug("no location");
       return {};
     }
 
@@ -62,10 +61,11 @@ export class Background extends Logger {
     reason: browser.runtime.OnInstalledReason;
     temporary: boolean;
   }): Promise<browser.tabs.Tab | undefined> {
-    this.debug("onInstalled", details);
+    const { debug } = this.logger("handleInstalled");
+    debug("onInstalled", details);
     switch (details.reason) {
       case "install":
-        this.debug("First install, opening Riot tab");
+        debug("First install, opening Riot tab");
         return this.createTab();
 
       case "update":
@@ -76,19 +76,20 @@ export class Background extends Logger {
   }
 
   async maybeUpdated(): Promise<void> {
+    const { debug } = this.logger("maybeUpdated");
     const { update } = await browser.storage.local.get("update");
     if (!update) {
       return;
     }
 
-    this.debug("Updated", update);
+    debug("Updated", update);
     try {
       const windows = await browser.windows.getAll();
       const windowIds = windows.map(window => window.id);
 
       await Promise.all(
         update.tabs.map((tab: any) => {
-          this.debug("Reopening tab", tab);
+          debug("Reopening tab", tab);
           // TODO: legacy `if`, remove with next major version
           if (!tab.url) {
             let url = this.webappPath;
@@ -117,7 +118,7 @@ export class Background extends Logger {
         })
       );
     } catch (error) {
-      this.debug("Reopening tabs after update failed", error);
+      debug("Reopening tabs after update failed", error);
       throw error;
     }
 
@@ -125,7 +126,8 @@ export class Background extends Logger {
   }
 
   async handleMessage(message: any): Promise<any> {
-    this.debug("Incoming message", message);
+    const { debug } = this.logger("handleMessage");
+    debug("Incoming message", message);
 
     switch (message.method) {
       case "version":
@@ -147,18 +149,21 @@ export class Background extends Logger {
   }
 
   handleUpdateAvailable(details: { version: string }): void {
-    this.debug("Update available", details);
+    const { debug } = this.logger("handleUpdateAvailable");
+    debug("Update available", details);
     this.version = details.version;
   }
 
   async createTab(): Promise<browser.tabs.Tab> {
-    this.debug("Creating riot tab");
+    const { debug } = this.logger("createTab");
+    debug("Creating riot tab");
     return browser.tabs.create({
       url: this.webappPath
     });
   }
 
   async installUpdate(): Promise<void> {
+    const { debug } = this.logger("installUpdate");
     try {
       this.activeTabs = [];
       await browser.runtime.sendMessage({ method: "activeTabs" });
@@ -192,7 +197,7 @@ export class Background extends Logger {
       this.activeTabs = [];
       browser.runtime.reload();
     } catch (error) {
-      this.debug("updating failed", error.toString());
+      debug("updating failed", error.toString());
       throw error;
     }
   }

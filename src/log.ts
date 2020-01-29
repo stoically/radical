@@ -1,31 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-export function log(
-  target: Log,
-  propertyName: string,
-  propertyDesciptor: PropertyDescriptor
-): PropertyDescriptor {
-  const method = propertyDesciptor.value;
-
-  propertyDesciptor.value = function(...args: any[]): any {
-    const log = {
+export class Logger {
+  logger(scope: string): { debug: (...args: any[]) => void } {
+    return {
       debug: (...args: any[]): void => {
-        target.debug(propertyName, ...args);
+        console.log(
+          `WebExtension::${this.constructor.name}::${scope}`,
+          ...args
+        );
       }
     };
-    args.push(log);
-
-    return method.apply(this, args);
-  };
-  return propertyDesciptor;
-}
-
-export interface Log {
-  debug: (...args: any[]) => void;
-}
-
-export class Logger {
-  debug(scope: string, ...args: any[]): void {
-    console.log(`WebExtension::${this.constructor.name}::${scope}:`, ...args);
   }
 }
