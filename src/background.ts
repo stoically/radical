@@ -33,12 +33,18 @@ export class Background extends Log {
 
   async handleInstalled(details: {
     reason: browser.runtime.OnInstalledReason;
+    temporary: boolean;
   }): Promise<browser.tabs.Tab | undefined> {
     this.debug("onInstalled", details);
     switch (details.reason) {
       case "install":
         this.debug("First install, opening Riot tab");
         return this.createTab();
+
+      case "update":
+        if (details.temporary) {
+          return this.createTab();
+        }
     }
   }
 
