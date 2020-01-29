@@ -8,7 +8,7 @@
     "riot-web:install": "cd riot-web && ./scripts/fetch-develop.deps.sh --depth 1 && yarn install",
     "riot-web:build": "cd riot-web && BUILD_TARGET=webext yarn build",
     "riot-web:copy": "./scripts/copy-riot-web.sh",
-    "build": "run-s build:* test:coverage lint",
+    "build": "run-s build:* lint test:coverage",
     "build:riot-web": "run-s riot-web:*",
     "build:firefox": "npm run parcel:build -- -d build/firefox",
     "build:chrome": "npm run parcel:build -- -d build/chrome",
@@ -85,7 +85,8 @@
     ],
     "reporter": [
       "html",
-      "text"
+      "text",
+      "lcov"
     ]
   },
   "externals": {
