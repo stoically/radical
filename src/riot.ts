@@ -42,6 +42,9 @@ export const sanitize = (): void => {
     },
     tabs: {
       getCurrent: browser.tabs.getCurrent
+    },
+    permissions: {
+      request: browser.permissions.request
     }
   };
   // @ts-ignore

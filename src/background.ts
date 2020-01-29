@@ -9,6 +9,15 @@ declare global {
   }
 }
 
+type SsoResponseListener = (
+  details: webRequestOnHeadersReceivedCallbackDetails
+) => Promise<browser.webRequest.BlockingResponse>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Message = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MessageResponse = any;
+
 export class Background extends Logger {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
@@ -27,34 +36,81 @@ export class Background extends Logger {
     );
     browser.browserAction.onClicked.addListener(this.createTab.bind(this));
 
-    browser.webRequest.onHeadersReceived.addListener(
-      this.handleMozillaSSO.bind(this),
-      { urls: ["https://mozilla.modular.im/_matrix/saml2/*"] },
-      ["responseHeaders"]
-    );
-
     browser.storage.local.set({ version: this.version });
 
     this.maybeUpdated();
   }
 
-  async handleMozillaSSO(
-    details: webRequestOnHeadersReceivedCallbackDetails
-  ): Promise<browser.webRequest.BlockingResponse> {
-    const { debug } = this.logger("handleMozillaSSO");
-    debug(details);
+  async handleSsoLogin(
+    url: string,
+    homeserverUrl: string,
+    tabId: number
+  ): Promise<void> {
+    const { debug } = this.logger("handleSsoLogin");
+    debug(url, homeserverUrl);
 
-    const location = details.responseHeaders?.find(
-      responseHeader => responseHeader.name.toLowerCase() === "location"
-    );
-
-    if (!location) {
-      debug("no location");
-      return {};
+    const responseUrl = `${homeserverUrl}/*`;
+    const granted = await browser.permissions.request({
+      permissions: ["webRequest"],
+      origins: [responseUrl]
+    });
+    if (granted) {
+      debug("permissions granted");
+    } else {
+      debug("permissions denied");
+      return;
     }
 
-    await browser.tabs.update(details.tabId, { url: location.value });
-    return {};
+    browser.webRequest.onHeadersReceived.addListener(
+      this.createSsoResponseListener(tabId),
+      { urls: [responseUrl] },
+      ["responseHeaders"]
+    );
+
+    debug("redirecting tab", tabId, url);
+    await browser.tabs.update(tabId, { url });
+  }
+
+  createSsoResponseListener(tabId: number): SsoResponseListener {
+    let listenerTimeout: false | NodeJS.Timeout = false;
+    const listener: SsoResponseListener = async (
+      details: webRequestOnHeadersReceivedCallbackDetails
+    ) => {
+      const { debug } = this.logger("ssoResponseListener");
+      debug(details.url);
+
+      if (!listenerTimeout) {
+        listenerTimeout = setTimeout(() => {
+          // remove listener after an hour in case the sso flow is interrupted
+          browser.webRequest.onHeadersReceived.removeListener(listener);
+          debug("sso timed out");
+        }, 60 * 60 * 1000);
+        debug("registered 1h timeout");
+      }
+
+      const location = details.responseHeaders?.find(
+        responseHeader => responseHeader.name.toLowerCase() === "location"
+      );
+      if (!location?.value) {
+        debug("no location header");
+        return {};
+      }
+
+      const url = new URL(location.value);
+      debug("location header found", url.origin);
+      if (!browser.runtime.getURL("/").startsWith(url.origin)) {
+        debug("location does not point to the extension, ignoring");
+        return {};
+      }
+
+      debug("location points to the extension, redirecting tab", tabId);
+      browser.webRequest.onHeadersReceived.removeListener(listener);
+      clearTimeout(listenerTimeout);
+      await browser.tabs.update(tabId, { url: location.value });
+      return {};
+    };
+
+    return listener;
   }
 
   async handleInstalled(details: {
@@ -125,7 +181,10 @@ export class Background extends Logger {
     await browser.storage.local.remove("update");
   }
 
-  async handleMessage(message: any): Promise<any> {
+  async handleMessage(
+    message: Message,
+    sender: browser.runtime.MessageSender
+  ): Promise<MessageResponse> {
     const { debug } = this.logger("handleMessage");
     debug("Incoming message", message);
 
@@ -145,6 +204,16 @@ export class Background extends Logger {
 
       case "config":
         return this.getConfig();
+
+      case "ssoLogin":
+        if (!sender.tab?.id) {
+          return;
+        }
+        return this.handleSsoLogin(
+          message.url,
+          message.homeserverUrl,
+          sender.tab.id
+        );
     }
   }
 

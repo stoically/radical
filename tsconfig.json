@@ -7,7 +7,6 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]

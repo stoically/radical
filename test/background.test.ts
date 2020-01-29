@@ -254,23 +254,5 @@ browserTypes.map(browserType => {
         })
       );
     });
-
-    it("should handle SSO", async function() {
-      const tab = await this.browser.tabs.create({});
-      const redirectUrl = this.browser.runtime.getURL("riot/index.html");
-      await this.browser.webRequest.onHeadersReceived.addListener.yield({
-        tabId: tab.id,
-        responseHeaders: [
-          {
-            name: "Location",
-            value: redirectUrl
-          }
-        ]
-      });
-
-      expect(this.browser.tabs.update).to.have.been.calledWithMatch(tab.id, {
-        url: redirectUrl
-      });
-    });
   });
 });
