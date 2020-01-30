@@ -2,6 +2,7 @@
 import { BrowserFake } from "webextensions-api-fake";
 import { Background } from "~/background";
 import { JSDOM } from "jsdom";
+import { BackgroundHelper } from "./background.helper";
 
 declare global {
   namespace NodeJS {
@@ -20,10 +21,11 @@ declare global {
   namespace Mocha {
     interface Context {
       browser: BrowserFake;
-      riotBrowser: BrowserFake;
+      riot: BrowserFake;
       background: Background;
       dom: JSDOM;
       clock: sinon.SinonFakeTimers;
+      helper: BackgroundHelper;
     }
   }
 }

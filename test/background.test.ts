@@ -1,83 +1,18 @@
-import { JSDOM } from "jsdom";
-import browserFake from "webextensions-api-fake";
-import { ImportMock } from "ts-mock-imports";
-import sinon from "sinon";
-import chai from "chai";
-import sinonChai from "sinon-chai";
-chai.use(sinonChai);
-const { expect } = chai;
-
-import * as utils from "../src/utils";
-const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
-injectScriptStub.resolves();
-
 import { Background } from "../src/background";
-import { listener } from "../src/riot";
-
-const html =
-  '<!doctype html><html><head><meta charset="utf-8">' +
-  "</head><body></body></html>";
-
-const browserManifest = (browserType: string): any => {
-  switch (browserType) {
-    case "firefox":
-      return {
-        version: "1.2.3",
-        applications: {
-          gecko: {}
-        }
-      };
-
-    case "chrome":
-      return { version: "1.2.3" };
-  }
-};
+import { BackgroundHelper, expect, sinon } from "./background.helper";
 
 const browserTypes = !process.env.BROWSER_TYPE
   ? ["firefox", "chrome"]
   : [process.env.BROWSER_TYPE];
 
 browserTypes.map(browserType => {
-  const manifest = browserManifest(browserType);
-
   describe(`WebExtension Background: ${browserType}`, function() {
     beforeEach(async function() {
-      this.dom = new JSDOM(html);
-      this.clock = sinon.useFakeTimers();
-      global.window = this.dom.window;
-      global.window.location.hash = "#/welcome";
-      global.document = this.dom.window.document;
-      global.document.createElement = sinon.stub().resolves();
-
-      this.riotBrowser = browserFake();
-      listener(this.riotBrowser);
-
-      this.browser = browserFake();
-      this.browser.runtime.getManifest.returns(manifest);
-      this.browser.windows.getAll.resolves([
-        { id: this.browser.windows.WINDOW_ID_CURRENT }
-      ]);
-      this.browser.runtime.sendMessage.callsFake((...args) => {
-        this.riotBrowser.runtime.onMessage.addListener.yield(...args);
-      });
-      this.riotBrowser.runtime.sendMessage.callsFake((...args) => {
-        this.browser.runtime.onMessage.addListener.yield(...args);
-      });
-      global.browser = this.browser;
-      this.background = new Background();
+      this.helper = new BackgroundHelper(this, browserType);
     });
 
     afterEach(function() {
-      this.browser.sinonSandbox.reset();
-      this.riotBrowser.sinonSandbox.reset();
-      this.clock.restore();
-
-      delete global.window;
-      delete global.browser;
-      delete global.chrome;
-      delete this.dom;
-      delete this.browser;
-      delete this.riotBrowser;
+      this.helper.cleanup();
     });
 
     it("should register event listeners", function() {
@@ -105,59 +40,28 @@ browserTypes.map(browserType => {
     });
 
     it("should respond with manifest version", async function() {
-      const [promise] = (this.browser.runtime.onMessage.addListener.yield({
-        method: "version"
-      }) as unknown) as Promise<any>[];
-      const version = await promise;
+      const version = await this.helper.sendMessage("version");
 
       expect(version).to.equal("1.2.3");
     });
 
     it("should respond with new version after update", async function() {
-      this.browser.runtime.onUpdateAvailable.addListener.yield({
-        version: "1.2.4"
-      });
-
-      const [promise] = (this.browser.runtime.onMessage.addListener.yield({
-        method: "version"
-      }) as unknown) as Promise<any>[];
-      const version = await promise;
+      this.helper.updateAvailable("1.2.4");
+      const version = await this.helper.sendMessage("version");
 
       expect(version).to.equal("1.2.4");
     });
 
     it("should reopen riot tabs after update", async function() {
-      this.browser.runtime.onUpdateAvailable.addListener.yield({
-        version: "1.2.4"
-      });
-
-      const [
-        tabPromise
-      ] = (this.browser.browserAction.onClicked.addListener.yield() as unknown) as Promise<
-        any
-      >[];
-      const tab = await tabPromise;
-      await this.browser.tabs.update(tab.id, {
-        url: tab.url + window.location.hash
-      });
-
-      this.riotBrowser.tabs.getCurrent.resolves(tab);
-
-      const [
-        messagePromise
-      ] = (this.browser.runtime.onMessage.addListener.yield({
-        method: "installUpdate"
-      }) as unknown) as Promise<any>[];
-
-      await new Promise(resolve => process.nextTick(resolve));
-      this.clock.runAll();
-
-      await messagePromise;
+      this.helper.updateAvailable();
+      const tab = await this.helper.createTab();
+      const messagePromise = this.helper.sendMessage("installUpdate");
+      await this.helper.afterClock(messagePromise);
       expect(this.browser.runtime.reload).to.have.been.calledOnce;
 
       this.browser.sinonSandbox.resetHistory();
       this.background = new Background();
-      await new Promise(resolve => process.nextTick(resolve));
+      await this.helper.nextTick();
 
       expect(this.browser.tabs.create).to.have.been.calledOnceWith(
         sinon.match({
@@ -177,37 +81,15 @@ browserTypes.map(browserType => {
     });
 
     it("should create new window if it doesn't exist after update", async function() {
-      this.browser.runtime.onUpdateAvailable.addListener.yield({
-        version: "1.2.4"
-      });
-
-      const [
-        tabPromise
-      ] = (this.browser.browserAction.onClicked.addListener.yield() as unknown) as Promise<
-        any
-      >[];
-      const tab = await tabPromise;
-      await this.browser.tabs.update(tab.id, {
-        url: tab.url + window.location.hash
-      });
-
-      this.riotBrowser.tabs.getCurrent.resolves(tab);
-
-      const [
-        messagePromise
-      ] = (this.browser.runtime.onMessage.addListener.yield({
-        method: "installUpdate"
-      }) as unknown) as Promise<any>[];
-
-      await new Promise(resolve => process.nextTick(resolve));
-      this.clock.runAll();
-
-      await messagePromise;
-
+      this.helper.updateAvailable();
+      const tab = await this.helper.createTab();
+      const messagePromise = this.helper.sendMessage("installUpdate");
+      await this.helper.afterClock(messagePromise);
       this.browser.sinonSandbox.resetHistory();
       this.browser.windows.getAll.resolves([]);
+
       this.background = new Background();
-      await new Promise(resolve => process.nextTick(resolve));
+      await this.helper.nextTick();
 
       expect(this.browser.windows.create).to.have.been.calledOnceWith(
         sinon.match({
@@ -217,7 +99,5 @@ browserTypes.map(browserType => {
         })
       );
     });
-
-    it("should handle SSO logins", () => {});
   });
 });
