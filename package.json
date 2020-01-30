@@ -5,7 +5,7 @@
     "install": "run-s submodule:* install:riot-web",
     "install:riot-web": "cd riot-web && yarn install",
     "submodule:init": "git submodule init",
-    "submodule:update": "git submodule update",
+    "submodule:update": "git submodule update --depth 2",
     "clean": "rimraf build riot-web matrix-react-sdk",
     "build": "run-s build:*",
     "build:patch-matrix-react-sdk": "cd matrix-react-sdk && cp -r src/* ../riot-web/node_modules/matrix-react-sdk/src/",
