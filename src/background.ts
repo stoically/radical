@@ -43,23 +43,11 @@ export class Background extends Logger {
 
   async handleSsoLogin(
     url: string,
-    homeserverUrl: string,
+    responseUrl: string,
     tabId: number
   ): Promise<void> {
     const { debug } = this.logger("handleSsoLogin");
-    debug(url, homeserverUrl);
-
-    const responseUrl = `${homeserverUrl}/*`;
-    const granted = await browser.permissions.request({
-      permissions: ["webRequest"],
-      origins: [responseUrl]
-    });
-    if (granted) {
-      debug("permissions granted");
-    } else {
-      debug("permissions denied");
-      return;
-    }
+    debug(url, responseUrl);
 
     browser.webRequest.onHeadersReceived.addListener(
       this.createSsoResponseListener(tabId),
@@ -77,7 +65,7 @@ export class Background extends Logger {
       details: webRequestOnHeadersReceivedCallbackDetails
     ) => {
       const { debug } = this.logger("ssoResponseListener");
-      debug(details.url);
+      debug("incoming", details.url);
 
       if (!listenerTimeout) {
         listenerTimeout = setTimeout(() => {
@@ -211,7 +199,7 @@ export class Background extends Logger {
         }
         return this.handleSsoLogin(
           message.url,
-          message.homeserverUrl,
+          message.responseUrl,
           sender.tab.id
         );
     }
