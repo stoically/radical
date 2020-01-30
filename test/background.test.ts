@@ -176,43 +176,6 @@ browserTypes.map(browserType => {
       });
     });
 
-    // TODO: legacy update, remove with next major version
-    it("should reopen riot tabs after update", async function() {
-      this.browser.runtime.onUpdateAvailable.addListener.yield({
-        version: "1.2.4"
-      });
-
-      const [
-        tabPromise
-      ] = (this.browser.browserAction.onClicked.addListener.yield() as unknown) as Promise<
-        any
-      >[];
-      const tab = await tabPromise;
-
-      this.browser.storage.local.set({
-        update: {
-          version: "1.2.4",
-          tabs: [tab]
-        }
-      });
-
-      this.browser.sinonSandbox.resetHistory();
-      this.background = new Background();
-      await new Promise(resolve => process.nextTick(resolve));
-
-      expect(this.browser.tabs.create).to.have.been.calledOnceWith(
-        sinon.match({
-          index: tab.index,
-          url: tab.url,
-          windowId: tab.windowId
-        })
-      );
-
-      expect(await this.browser.storage.local.get("update")).to.deep.equal({
-        update: undefined
-      });
-    });
-
     it("should create new window if it doesn't exist after update", async function() {
       this.browser.runtime.onUpdateAvailable.addListener.yield({
         version: "1.2.4"
@@ -254,5 +217,7 @@ browserTypes.map(browserType => {
         })
       );
     });
+
+    it("should handle SSO logins", () => {});
   });
 });

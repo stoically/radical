@@ -134,15 +134,12 @@ export class Background extends Logger {
       await Promise.all(
         update.tabs.map((tab: any) => {
           debug("Reopening tab", tab);
-          // TODO: legacy `if`, remove with next major version
-          if (!tab.url) {
-            let url = this.webappPath;
-            if (tab.hash) {
-              url += tab.hash;
-            }
-            tab.url = url;
-            delete tab.hash;
+          let url = this.webappPath;
+          if (tab.hash) {
+            url += tab.hash;
           }
+          tab.url = url;
+          delete tab.hash;
 
           if (this.browserType !== "firefox") {
             delete tab.cookieStoreId;
