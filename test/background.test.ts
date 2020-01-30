@@ -1,5 +1,6 @@
 import { Background } from "../src/background";
-import { BackgroundHelper, expect, sinon } from "./background.helper";
+import { BackgroundHelper } from "./background.helper";
+import { expect, sinon } from "./common";
 
 const browserTypes = !process.env.BROWSER_TYPE
   ? ["firefox", "chrome"]

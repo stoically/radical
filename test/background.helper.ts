@@ -1,31 +1,24 @@
 import { JSDOM } from "jsdom";
-import sinon from "sinon";
 import browserFake from "webextensions-api-fake";
 import { ImportMock } from "ts-mock-imports";
-import chai from "chai";
-import sinonChai from "sinon-chai";
-chai.use(sinonChai);
-const { expect } = chai;
-export { sinon, expect };
-
 import { Background } from "~/background";
 import { listener as riotListener } from "~/riot";
+import { sinon, html } from "./common";
 
 import * as utils from "~/utils";
 import { Message, MessageResponse } from "~/types";
-const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
-injectScriptStub.resolves();
 
 export class BackgroundHelper {
   public defaultTab!: browser.tabs.Tab;
 
   private context!: Mocha.Context;
-  private html =
-    '<!doctype html><html><head><meta charset="utf-8">' +
-    "</head><body></body></html>";
+  private injectScriptStub!: sinon.SinonStub;
 
   async initialize(context: Mocha.Context, browserType: string): Promise<this> {
-    context.dom = new JSDOM(this.html);
+    this.injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
+    this.injectScriptStub.resolves();
+
+    context.dom = new JSDOM(html);
     context.clock = sinon.useFakeTimers();
     global.window = context.dom.window;
     global.window.location.hash = "#/welcome";
@@ -59,6 +52,20 @@ export class BackgroundHelper {
     context.browser.tabs.update.resetHistory();
 
     return this;
+  }
+
+  cleanup(): void {
+    this.context.browser.sinonSandbox.reset();
+    this.context.riot.sinonSandbox.reset();
+    this.context.clock.restore();
+    this.injectScriptStub.restore();
+
+    delete global.window;
+    delete global.browser;
+    delete global.chrome;
+    delete this.context.dom;
+    delete this.context.browser;
+    delete this.context.riot;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -120,18 +127,5 @@ export class BackgroundHelper {
       case "chrome":
         return { version: "1.2.3" };
     }
-  }
-
-  cleanup(): void {
-    this.context.browser.sinonSandbox.reset();
-    this.context.riot.sinonSandbox.reset();
-    this.context.clock.restore();
-
-    delete global.window;
-    delete global.browser;
-    delete global.chrome;
-    delete this.context.dom;
-    delete this.context.browser;
-    delete this.context.riot;
   }
 }
