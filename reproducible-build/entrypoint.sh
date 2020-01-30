@@ -18,11 +18,11 @@ build () {
   wget $2 -O $1-extension.zip
   unzip $1-extension.zip -d $1-extension || true
   EXTENSION_VERSION="v$(jq -r '.version' $1-extension/manifest.json)"
-  echo "$1 extension Version: $EXTENSION_VERSION"
+  echo "$1 extension version: $EXTENSION_VERSION"
 
   git clone https://github.com/stoically/riot-webext
   cd riot-webext
-  $2 | xargs git checkout
+  $EXTENSION_VERSION | xargs git checkout
   npm install
   npm run build
 
