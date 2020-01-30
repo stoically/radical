@@ -24,7 +24,7 @@ yarn is required to build riot-web.
 
 ```shell
 npm install
-npm run riot-web:install
+npm run riot-web:fetch-develop
 npm run dev
 ```
 

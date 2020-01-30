@@ -1,5 +1,6 @@
 [submodule "riot-web"]
 	path = riot-web
 	url = https://github.com/stoically/riot-web.git
-	branch = webext
-	ignore = dirty
+[submodule "matrix-react-sdk"]
+	path = matrix-react-sdk
+	url = https://github.com/stoically/matrix-react-sdk.git
