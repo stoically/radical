@@ -19,8 +19,4 @@ describe("Utils", () => {
 
     expect(global.document.body.append).to.have.been.calledOnce;
   });
-
-  afterEach(() => {
-    delete global.document;
-  });
 });

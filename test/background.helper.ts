@@ -1,12 +1,13 @@
 import { JSDOM } from "jsdom";
 import browserFake from "webextensions-api-fake";
 import { ImportMock } from "ts-mock-imports";
+
+import { sinon, html } from "./common";
+import { Message, MessageResponse } from "~/types";
+import * as utils from "~/utils";
+
 import { Background } from "~/background";
 import { listener as riotListener } from "~/riot";
-import { sinon, html } from "./common";
-
-import * as utils from "~/utils";
-import { Message, MessageResponse } from "~/types";
 
 export class BackgroundHelper {
   public defaultTab!: browser.tabs.Tab;
@@ -60,9 +61,6 @@ export class BackgroundHelper {
     this.context.clock.restore();
     this.injectScriptStub.restore();
 
-    delete global.window;
-    delete global.browser;
-    delete global.chrome;
     delete this.context.dom;
     delete this.context.browser;
     delete this.context.riot;

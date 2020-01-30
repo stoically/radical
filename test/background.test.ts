@@ -1,10 +1,6 @@
 import { Background } from "../src/background";
 import { BackgroundHelper } from "./background.helper";
-import { expect, sinon } from "./common";
-
-const browserTypes = !process.env.BROWSER_TYPE
-  ? ["firefox", "chrome"]
-  : [process.env.BROWSER_TYPE];
+import { expect, sinon, browserTypes } from "./common";
 
 browserTypes.map(browserType => {
   describe(`WebExtension Background: ${browserType}`, function() {
