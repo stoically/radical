@@ -8,7 +8,7 @@ const browserTypes = !process.env.BROWSER_TYPE
 browserTypes.map(browserType => {
   describe(`WebExtension Background: ${browserType}`, function() {
     beforeEach(async function() {
-      this.helper = new BackgroundHelper(this, browserType);
+      this.helper = await new BackgroundHelper().initialize(this, browserType);
     });
 
     afterEach(function() {
@@ -40,14 +40,14 @@ browserTypes.map(browserType => {
     });
 
     it("should respond with manifest version", async function() {
-      const version = await this.helper.sendMessage("version");
+      const version = await this.helper.sendMessage({ method: "version" });
 
       expect(version).to.equal("1.2.3");
     });
 
     it("should respond with new version after update", async function() {
       this.helper.updateAvailable("1.2.4");
-      const version = await this.helper.sendMessage("version");
+      const version = await this.helper.sendMessage({ method: "version" });
 
       expect(version).to.equal("1.2.4");
     });
@@ -55,7 +55,9 @@ browserTypes.map(browserType => {
     it("should reopen riot tabs after update", async function() {
       this.helper.updateAvailable();
       const tab = await this.helper.createTab();
-      const messagePromise = this.helper.sendMessage("installUpdate");
+      const messagePromise = this.helper.sendMessage({
+        method: "installUpdate"
+      });
       await this.helper.afterClock(messagePromise);
       expect(this.browser.runtime.reload).to.have.been.calledOnce;
 
@@ -83,7 +85,9 @@ browserTypes.map(browserType => {
     it("should create new window if it doesn't exist after update", async function() {
       this.helper.updateAvailable();
       const tab = await this.helper.createTab();
-      const messagePromise = this.helper.sendMessage("installUpdate");
+      const messagePromise = this.helper.sendMessage({
+        method: "installUpdate"
+      });
       await this.helper.afterClock(messagePromise);
       this.browser.sinonSandbox.resetHistory();
       this.browser.windows.getAll.resolves([]);
@@ -98,6 +102,38 @@ browserTypes.map(browserType => {
           url: tab.url
         })
       );
+    });
+
+    it("should handle SSO login", async function() {
+      const tab = this.helper.defaultTab;
+      const url = "https://example.org/sso/login";
+      const responsePattern = "https://example.org/*";
+      await this.helper.sendMessage({
+        method: "ssoLogin",
+        url,
+        responsePattern
+      });
+
+      expect(this.browser.webRequest.onHeadersReceived.addListener).to.have.been
+        .calledOnce;
+      expect(this.browser.tabs.update).to.have.been.calledOnceWith(tab.id, {
+        url
+      });
+
+      this.browser.tabs.update.resetHistory();
+      const extensionUrl = "http://cantuseextensionscheme/riot/index.html";
+      this.browser.runtime.getURL.returns(extensionUrl);
+      this.browser.webRequest.onHeadersReceived.addListener.yield({
+        url: "https://example.org/sso/auth_response",
+        responseHeaders: [{ name: "Location", value: extensionUrl }]
+      });
+
+      expect(this.browser.webRequest.onHeadersReceived.removeListener).to.have
+        .been.calledOnce;
+
+      expect(this.browser.tabs.update).to.have.been.calledOnceWith(tab.id, {
+        url: extensionUrl
+      });
     });
   });
 });

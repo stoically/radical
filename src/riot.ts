@@ -1,22 +1,29 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { injectScript } from "./utils";
+import { Logger } from "./log";
+const logger = new Logger();
+const log = logger.logger("[WebExtension Initializer]");
+
+declare global {
+  interface Window {
+    vector_indexeddb_worker_script: string;
+  }
+}
 
 export const listener = (browser: any): void => {
   // listener for messages from background
   browser.runtime.onMessage.addListener((message: any) => {
-    console.log("[WebExtension Initializer] Incoming message", message);
+    log.debug("[WebExtension Initializer] Incoming message", message);
 
     switch (message.method) {
       case "activeTabs":
         (async (): Promise<void> => {
           const tab = await browser.tabs.getCurrent();
           if (!tab) {
-            console.error(
-              "[WebExtension Initializer] could not getCurrent() tab"
-            );
+            log.debug("[WebExtension Initializer] could not getCurrent() tab");
             return;
           }
-          console.log("[WebExtension Initializer] Current tab", tab);
+          log.debug("[WebExtension Initializer] Current tab", tab);
 
           browser.runtime.sendMessage({
             method: "activeTab",

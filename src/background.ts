@@ -1,22 +1,14 @@
 import riotConfigBundled from "../riot-web/config.sample.json";
-import { webRequestOnHeadersReceivedCallbackDetails } from "./types-browser.js";
 import { Logger } from "./log";
+
+import { SSO } from "./background/sso";
+import { Message, MessageResponse } from "./types.js";
 
 declare global {
   interface Window {
     background: Background;
-    vector_indexeddb_worker_script: string;
   }
 }
-
-type SsoResponseListener = (
-  details: webRequestOnHeadersReceivedCallbackDetails
-) => Promise<browser.webRequest.BlockingResponse>;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Message = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MessageResponse = any;
 
 export class Background extends Logger {
   public webappPath = "/riot/index.html";
@@ -24,6 +16,8 @@ export class Background extends Logger {
   public version = this.manifest.version;
   public browserType = this.manifest.applications?.gecko ? "firefox" : "chrome";
   public activeTabs: { tabId: number; hash: string }[] = [];
+
+  public sso = new SSO();
 
   constructor() {
     super();
@@ -39,66 +33,6 @@ export class Background extends Logger {
     browser.storage.local.set({ version: this.version });
 
     this.maybeUpdated();
-  }
-
-  async handleSsoLogin(
-    url: string,
-    responseUrl: string,
-    tabId: number
-  ): Promise<void> {
-    const { debug } = this.logger("handleSsoLogin");
-    debug(url, responseUrl);
-
-    browser.webRequest.onHeadersReceived.addListener(
-      this.createSsoResponseListener(tabId),
-      { urls: [responseUrl] },
-      ["responseHeaders"]
-    );
-
-    debug("redirecting tab", tabId, url);
-    await browser.tabs.update(tabId, { url });
-  }
-
-  createSsoResponseListener(tabId: number): SsoResponseListener {
-    let listenerTimeout: false | NodeJS.Timeout = false;
-    const listener: SsoResponseListener = async (
-      details: webRequestOnHeadersReceivedCallbackDetails
-    ) => {
-      const { debug } = this.logger("ssoResponseListener");
-      debug("incoming", details.url);
-
-      if (!listenerTimeout) {
-        listenerTimeout = setTimeout(() => {
-          // remove listener after an hour in case the sso flow is interrupted
-          browser.webRequest.onHeadersReceived.removeListener(listener);
-          debug("sso timed out");
-        }, 60 * 60 * 1000);
-        debug("registered 1h timeout");
-      }
-
-      const location = details.responseHeaders?.find(
-        responseHeader => responseHeader.name.toLowerCase() === "location"
-      );
-      if (!location?.value) {
-        debug("no location header");
-        return {};
-      }
-
-      const url = new URL(location.value);
-      debug("location header found", url.origin);
-      if (!browser.runtime.getURL("/").startsWith(url.origin)) {
-        debug("location does not point to the extension, ignoring");
-        return {};
-      }
-
-      debug("location points to the extension, redirecting tab", tabId);
-      browser.webRequest.onHeadersReceived.removeListener(listener);
-      clearTimeout(listenerTimeout);
-      await browser.tabs.update(tabId, { url: location.value });
-      return {};
-    };
-
-    return listener;
   }
 
   async handleInstalled(details: {
@@ -169,7 +103,7 @@ export class Background extends Logger {
   async handleMessage(
     message: Message,
     sender: browser.runtime.MessageSender
-  ): Promise<MessageResponse> {
+  ): MessageResponse {
     const { debug } = this.logger("handleMessage");
     debug("Incoming message", message);
 
@@ -192,11 +126,12 @@ export class Background extends Logger {
 
       case "ssoLogin":
         if (!sender.tab?.id) {
+          debug("ssoLogin: missing sender tab id");
           return;
         }
-        return this.handleSsoLogin(
+        return this.sso.handleLogin(
           message.url,
-          message.responseUrl,
+          message.responsePattern,
           sender.tab.id
         );
     }

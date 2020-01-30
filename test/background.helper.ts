@@ -8,20 +8,23 @@ chai.use(sinonChai);
 const { expect } = chai;
 export { sinon, expect };
 
-import { Background } from "../src/background";
-import { listener as riotListener } from "../src/riot";
+import { Background } from "~/background";
+import { listener as riotListener } from "~/riot";
 
-import * as utils from "../src/utils";
+import * as utils from "~/utils";
+import { Message, MessageResponse } from "~/types";
 const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
 injectScriptStub.resolves();
 
 export class BackgroundHelper {
-  private context: Mocha.Context;
+  public defaultTab!: browser.tabs.Tab;
+
+  private context!: Mocha.Context;
   private html =
     '<!doctype html><html><head><meta charset="utf-8">' +
     "</head><body></body></html>";
 
-  constructor(context: Mocha.Context, browserType: string) {
+  async initialize(context: Mocha.Context, browserType: string): Promise<this> {
     context.dom = new JSDOM(this.html);
     context.clock = sinon.useFakeTimers();
     global.window = context.dom.window;
@@ -48,17 +51,24 @@ export class BackgroundHelper {
     global.browser = context.browser;
     context.background = new Background();
 
-    context.helper = this;
     this.context = context;
+    this.context.helper = this;
+
+    this.defaultTab = await this.createTab();
+    context.browser.tabs.create.resetHistory();
+    context.browser.tabs.update.resetHistory();
+
+    return this;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sendMessage<T>(method: string): Promise<T> {
+  sendMessage(message: Message, sender?: browser.tabs.Tab): MessageResponse {
     const [
       messagePromise
-    ] = (this.context.browser.runtime.onMessage.addListener.yield({
-      method
-    }) as unknown) as Promise<T>[];
+    ] = (this.context.browser.runtime.onMessage.addListener.yield(
+      message,
+      sender || { tab: this.defaultTab }
+    ) as unknown) as MessageResponse[];
 
     return messagePromise;
   }
