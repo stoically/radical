@@ -1,0 +1,19 @@
+name: reproducible-build
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  reproducible-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - run: |
+          npm run reproducible-build
+
+
+
