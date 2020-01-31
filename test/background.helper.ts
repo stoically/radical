@@ -34,7 +34,7 @@ export class BackgroundHelper {
       this.browserManifest(browserType)
     );
     context.browser.windows.getAll.resolves([
-      { id: context.browser.windows.WINDOW_ID_CURRENT }
+      { id: context.browser.windows.WINDOW_ID_CURRENT },
     ]);
     context.browser.runtime.sendMessage.callsFake((...args) => {
       context.riot.runtime.onMessage.addListener.yield(...args);
@@ -67,7 +67,7 @@ export class BackgroundHelper {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sendMessage(message: Message, sender?: browser.tabs.Tab): MessageResponse {
     const [
-      messagePromise
+      messagePromise,
     ] = (this.context.browser.runtime.onMessage.addListener.yield(
       message,
       sender || { tab: this.defaultTab }
@@ -78,14 +78,14 @@ export class BackgroundHelper {
 
   async createTab(): Promise<browser.tabs.Tab> {
     const [
-      tabPromise
+      tabPromise,
     ] = (this.context.browser.browserAction.onClicked.addListener.yield() as unknown) as Promise<
       browser.tabs.Tab
     >[];
     const tab = await tabPromise;
 
     await this.context.browser.tabs.update(tab.id, {
-      url: tab.url + window.location.hash
+      url: tab.url + window.location.hash,
     });
 
     this.context.riot.tabs.getCurrent.resolves(tab);
@@ -95,7 +95,7 @@ export class BackgroundHelper {
 
   updateAvailable(version?: string): void {
     this.context.browser.runtime.onUpdateAvailable.addListener.yield({
-      version: version || "1.2.4"
+      version: version || "1.2.4",
     });
   }
 
@@ -116,8 +116,8 @@ export class BackgroundHelper {
         return {
           version: "1.2.3",
           applications: {
-            gecko: {}
-          }
+            gecko: {},
+          },
         };
 
       case "chrome":

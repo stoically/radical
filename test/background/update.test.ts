@@ -23,7 +23,7 @@ browserTypes.map(browserType => {
       this.helper.updateAvailable();
       const tab = await this.helper.createTab();
       const messagePromise = this.helper.sendMessage({
-        method: "installUpdate"
+        method: "installUpdate",
       });
       await this.helper.afterClock(messagePromise);
       expect(this.browser.runtime.reload).to.have.been.calledOnce;
@@ -40,12 +40,12 @@ browserTypes.map(browserType => {
           pinned: tab.pinned,
           url: tab.url,
           windowId: tab.windowId,
-          hash: undefined
+          hash: undefined,
         })
       );
 
       expect(await this.browser.storage.local.get("update")).to.deep.equal({
-        update: undefined
+        update: undefined,
       });
     });
 
@@ -53,7 +53,7 @@ browserTypes.map(browserType => {
       this.helper.updateAvailable();
       const tab = await this.helper.createTab();
       const messagePromise = this.helper.sendMessage({
-        method: "installUpdate"
+        method: "installUpdate",
       });
       await this.helper.afterClock(messagePromise);
       this.browser.sinonSandbox.resetHistory();
@@ -66,7 +66,7 @@ browserTypes.map(browserType => {
         sinon.match({
           cookieStoreId:
             browserType === "firefox" ? tab.cookieStoreId : undefined,
-          url: tab.url
+          url: tab.url,
         })
       );
     });

@@ -14,7 +14,7 @@ export class Logger {
           `WebExtension::${this.constructor.name}::${scope}`,
           ...args
         );
-      }
+      },
     };
   }
 }

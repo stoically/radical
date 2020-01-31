@@ -18,13 +18,13 @@ browserTypes.map(browserType => {
       await this.helper.sendMessage({
         method: "ssoLogin",
         url,
-        responsePattern
+        responsePattern,
       });
 
       expect(this.browser.webRequest.onHeadersReceived.addListener).to.have.been
         .calledOnce;
       expect(this.browser.tabs.update).to.have.been.calledOnceWith(tab.id, {
-        url
+        url,
       });
 
       this.browser.tabs.update.resetHistory();
@@ -32,14 +32,14 @@ browserTypes.map(browserType => {
       this.browser.runtime.getURL.returns(extensionUrl);
       this.browser.webRequest.onHeadersReceived.addListener.yield({
         url: "https://example.org/sso/auth_response",
-        responseHeaders: [{ name: "Location", value: extensionUrl }]
+        responseHeaders: [{ name: "Location", value: extensionUrl }],
       });
 
       expect(this.browser.webRequest.onHeadersReceived.removeListener).to.have
         .been.calledOnce;
 
       expect(this.browser.tabs.update).to.have.been.calledOnceWith(tab.id, {
-        url: extensionUrl
+        url: extensionUrl,
       });
     });
   });

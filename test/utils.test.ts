@@ -4,13 +4,13 @@ import { injectScript } from "~/utils";
 describe("Utils", () => {
   it("injectScript", async function() {
     const scriptFake = {
-      onload: sinon.stub()
+      onload: sinon.stub(),
     };
     global.document = {
       createElement: sinon.stub().returns(scriptFake),
       body: {
-        append: sinon.stub()
-      }
+        append: sinon.stub(),
+      },
     };
 
     const injected = injectScript("foo.js");

@@ -82,6 +82,9 @@
     "Firefox >= 67",
     "last 2 Chrome versions"
   ],
+  "prettier": {
+    "trailingComma": "es5"
+  },
   "mocha": {
     "bail": true,
     "reporter": "progress",

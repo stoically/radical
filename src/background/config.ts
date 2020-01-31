@@ -10,7 +10,7 @@ export class Config {
 
   async get(): Promise<any> {
     const { riotConfigDefault } = await browser.storage.local.get([
-      "riotConfigDefault"
+      "riotConfigDefault",
     ]);
 
     return riotConfigDefault || riotConfigBundled;

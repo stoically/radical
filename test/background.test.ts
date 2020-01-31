@@ -13,18 +13,18 @@ browserTypes.map(browserType => {
 
     it("should create riot tab upon installation", function() {
       this.browser.runtime.onInstalled.addListener.yield({
-        reason: "install"
+        reason: "install",
       });
 
       expect(this.browser.tabs.create).to.have.been.calledWithMatch({
-        url: this.background.webappPath
+        url: this.background.webappPath,
       });
     });
 
     it("should create riot tab when toolbar icon is clicked", function() {
       this.browser.browserAction.onClicked.addListener.yield();
       expect(this.browser.tabs.create).to.have.been.calledWithMatch({
-        url: this.background.webappPath
+        url: this.background.webappPath,
       });
     });
 

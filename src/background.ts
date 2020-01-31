@@ -71,7 +71,7 @@ export class Background extends Logger {
       case "activeTab":
         this.update.activeTab({
           tabId: message.tabId,
-          hash: message.hash
+          hash: message.hash,
         });
         return;
 
@@ -95,7 +95,7 @@ export class Background extends Logger {
     const { debug } = this.logger("createTab");
     debug("Creating riot tab");
     return browser.tabs.create({
-      url: this.webappPath
+      url: this.webappPath,
     });
   }
 }

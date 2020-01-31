@@ -30,7 +30,7 @@ const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
   }
   const options: JSONEditorOptions = {
     mode: "code",
-    modes: ["code", "form", "text", "tree", "view"]
+    modes: ["code", "form", "text", "tree", "view"],
   };
   const editor = new window.JSONEditor(container, options);
   await setConfigEditor(editor);
@@ -46,7 +46,7 @@ const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
     try {
       const updatedJson = editor.get();
       await browser.storage.local.set({
-        riotConfigDefault: updatedJson
+        riotConfigDefault: updatedJson,
       });
       message.innerText = "Saved successfully";
     } catch (error) {

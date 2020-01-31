@@ -28,7 +28,7 @@ export const listener = (browser: any): void => {
           browser.runtime.sendMessage({
             method: "activeTab",
             tabId: tab.id,
-            hash: window.location.hash
+            hash: window.location.hash,
           });
         })();
         break;
@@ -45,14 +45,14 @@ export const sanitize = (): void => {
   browser = {
     runtime: {
       sendMessage: browser.runtime.sendMessage,
-      onMessage: browser.runtime.onMessage
+      onMessage: browser.runtime.onMessage,
     },
     tabs: {
-      getCurrent: browser.tabs.getCurrent
+      getCurrent: browser.tabs.getCurrent,
     },
     permissions: {
-      request: browser.permissions.request
-    }
+      request: browser.permissions.request,
+    },
   };
   // @ts-ignore
   chrome = null;
