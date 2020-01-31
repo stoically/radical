@@ -9,6 +9,13 @@ import * as utils from "~/utils";
 import { Background } from "~/background";
 import { listener as riotListener } from "~/riot";
 
+interface Manifest {
+  version: string;
+  applications?: {
+    gecko?: {};
+  };
+}
+
 export class BackgroundHelper {
   public defaultTab!: browser.tabs.Tab;
 
@@ -110,7 +117,7 @@ export class BackgroundHelper {
     return new Promise(resolve => process.nextTick(resolve));
   }
 
-  browserManifest(browserType: string): any {
+  browserManifest(browserType: string): Manifest {
     switch (browserType) {
       case "firefox":
         return {
@@ -120,7 +127,7 @@ export class BackgroundHelper {
           },
         };
 
-      case "chrome":
+      default:
         return { version: "1.2.3" };
     }
   }

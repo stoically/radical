@@ -69,11 +69,10 @@ export class Background extends Logger {
         return this.update.installUpdate();
 
       case "activeTab":
-        this.update.activeTab({
+        return this.update.activeTab({
           tabId: message.tabId,
           hash: message.hash,
         });
-        return;
 
       case "config":
         return this.config.get();

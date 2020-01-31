@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { injectScript } from "./utils";
 import { Logger } from "./log";
+import { BrowserType } from "./types";
 const logger = new Logger();
 const log = logger.logScope("[WebExtension Initializer]");
 
@@ -10,19 +11,19 @@ declare global {
   }
 }
 
-export const listener = (browser: any): void => {
+interface Message {
+  method: "activeTabs";
+}
+
+export const listener = (browser: BrowserType): void => {
   // listener for messages from background
-  browser.runtime.onMessage.addListener((message: any) => {
+  browser.runtime.onMessage.addListener((message: Message) => {
     log.debug("[WebExtension Initializer] Incoming message", message);
 
     switch (message.method) {
       case "activeTabs":
         (async (): Promise<void> => {
           const tab = await browser.tabs.getCurrent();
-          if (!tab) {
-            log.error("[WebExtension Initializer] could not getCurrent() tab");
-            return;
-          }
           log.debug("[WebExtension Initializer] Current tab", tab);
 
           browser.runtime.sendMessage({

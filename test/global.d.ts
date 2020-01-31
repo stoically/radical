@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BrowserFake } from "webextensions-api-fake";
 import { Background } from "~/background";

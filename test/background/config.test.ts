@@ -1,5 +1,6 @@
 import { browserTypes, expect } from "test/common";
 import { BackgroundHelper } from "test/background.helper";
+import { MessageConfigResponse } from "~/types";
 
 browserTypes.map(browserType => {
   describe(`Background Config: ${browserType}`, function() {
@@ -12,7 +13,9 @@ browserTypes.map(browserType => {
     });
 
     it("should return the default config", async function() {
-      const config = await this.helper.sendMessage({ method: "config" });
+      const config = (await this.helper.sendMessage({
+        method: "config",
+      })) as MessageConfigResponse;
       expect(config.brand).to.be.equal("Riot");
     });
 
@@ -20,7 +23,9 @@ browserTypes.map(browserType => {
       await this.browser.storage.local.set({
         riotConfigDefault: { brand: "Custom" },
       });
-      const config = await this.helper.sendMessage({ method: "config" });
+      const config = (await this.helper.sendMessage({
+        method: "config",
+      })) as MessageConfigResponse;
       expect(config.brand).to.be.equal("Custom");
     });
   });

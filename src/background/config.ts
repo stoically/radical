@@ -1,5 +1,6 @@
 import riotConfigBundled from "~/../riot-web/config.sample.json";
 import { Background } from "~/background";
+import { RiotConfig } from "~/types";
 
 export class Config {
   private bg: Background;
@@ -8,7 +9,7 @@ export class Config {
     this.bg = bg;
   }
 
-  async get(): Promise<any> {
+  async get(): Promise<RiotConfig> {
     const { riotConfigDefault } = await browser.storage.local.get([
       "riotConfigDefault",
     ]);

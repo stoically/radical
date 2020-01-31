@@ -1,3 +1,7 @@
+import { BrowserFake } from "webextensions-api-fake";
+
+export type RiotConfig = { [key: string]: string | boolean };
+
 export interface MessageVersion {
   method: "version";
 }
@@ -29,5 +33,11 @@ export type Message =
   | MessageConfig
   | MessageSsoLogin;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type MessageResponse = Promise<any>;
+export type MessageVersionResponse = string;
+export type MessageConfigResponse = RiotConfig;
+
+export type MessageResponse = Promise<
+  MessageVersionResponse | MessageConfigResponse | void
+>;
+
+export type BrowserType = typeof browser | BrowserFake;
