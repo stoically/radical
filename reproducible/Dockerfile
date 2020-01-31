@@ -7,4 +7,5 @@ RUN mkdir /build
 WORKDIR /build
 COPY entrypoint.sh /entrypoint.sh
 
+VOLUME [ "/build" ]
 ENTRYPOINT [ "/entrypoint.sh" ]

@@ -35,7 +35,10 @@
     "test:coverage": "nyc npm run test",
     "web-ext:run": "web-ext run -s build/firefox",
     "web-ext:dev": "npm run web-ext:run -- -f firefox-dev",
-    "reproducible-build": "cd reproducible-build && docker build -t riot-webext . && docker run -t riot-webext"
+    "reproducible": "run-s reproducible:*",
+    "reproducible:clean": "rimraf reproducible/build",
+    "reproducible:build": "docker build -t riot-webext reproducible",
+    "reproducible:run": "docker run --rm -v $(pwd)/reproducible/build:/build -it riot-webext"
   },
   "dependencies": {
     "jsoneditor": "^8.4.1"

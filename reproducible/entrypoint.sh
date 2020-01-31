@@ -22,12 +22,13 @@ build () {
 
   git clone https://github.com/stoically/riot-webext
   cd riot-webext
-  $EXTENSION_VERSION | xargs git checkout
+  echo $EXTENSION_VERSION | xargs git checkout
+
   npm install
   npm run build
 
   echo "Diffing $1"
-  diff -u -r build/$1 ../$1-extension || true
+  diff build/$1 ../$1-extension -u -r --exclude=_metadata --exclude=manifest.json --exclude=META-INF
 
   cd ../..
 }
