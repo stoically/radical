@@ -1,13 +1,12 @@
-import { JSDOM } from "jsdom";
 import browserFake from "webextensions-api-fake";
 import { ImportMock } from "ts-mock-imports";
 
-import { sinon, html } from "./common";
+import { sinon, nextTick } from "./common";
 import { Message, MessageResponse } from "~/types";
 import * as utils from "~/utils";
 
-import { Background } from "~/background";
-import { listener as riotListener } from "~/riot";
+import { Background } from "~/background/lib";
+import { listener as riotListener } from "~/riot/lib";
 
 interface Manifest {
   version: string;
@@ -26,11 +25,8 @@ export class BackgroundHelper {
     this.injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
     this.injectScriptStub.resolves();
 
-    context.dom = new JSDOM(html);
     context.clock = sinon.useFakeTimers();
-    global.window = context.dom.window;
     global.window.location.hash = "#/welcome";
-    global.document = context.dom.window.document;
     global.document.createElement = sinon.stub().resolves();
 
     context.riot = browserFake();
@@ -114,7 +110,7 @@ export class BackgroundHelper {
   }
 
   nextTick(): Promise<void> {
-    return new Promise(resolve => process.nextTick(resolve));
+    return nextTick();
   }
 
   browserManifest(browserType: string): Manifest {

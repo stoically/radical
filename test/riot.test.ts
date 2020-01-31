@@ -5,17 +5,16 @@ import browserFake from "webextensions-api-fake";
 import { html, expect, browserTypes, sendMessage } from "./common";
 import * as utils from "~/utils";
 
-import * as riot from "~/riot";
+import * as riot from "~/riot/lib";
 
 browserTypes.map(browserType => {
   describe(`Riot Script ${browserType}`, () => {
-    it("listener", async function() {
+    it("#listener", async function() {
       const browser = browserFake();
       riot.listener(browser);
 
       expect(browser.runtime.onMessage.addListener).to.have.been.calledOnce;
 
-      global.window = new JSDOM(html).window;
       global.window.location.hash = "foo";
       const tab = await browser.tabs._create({});
       browser.tabs.getCurrent.returns(tab);
@@ -30,7 +29,7 @@ browserTypes.map(browserType => {
       });
     });
 
-    it("sanitize", function() {
+    it("#sanitize", function() {
       global.browser = global.chrome = browserFake();
       riot.sanitize();
 
@@ -38,7 +37,7 @@ browserTypes.map(browserType => {
       expect(global.chrome).to.be.null;
     });
 
-    it("run", function() {
+    it("#run", function() {
       const dom = new JSDOM(html);
       global.window = dom.window;
       global.document = dom.window.document;
@@ -56,7 +55,7 @@ browserTypes.map(browserType => {
       injectScriptStub.restore();
     });
 
-    it("initialize", async function() {
+    it("#initialize", async function() {
       const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
       injectScriptStub.callsFake(() => {
         global.browser = browserFake();
@@ -83,4 +82,11 @@ browserTypes.map(browserType => {
       runStub.restore();
     });
   });
+});
+
+it("should initialize", async function() {
+  const initializeStub = ImportMock.mockFunction(riot, "initialize");
+  await import("~/riot");
+  expect(initializeStub).to.have.been.calledOnce;
+  initializeStub.restore();
 });

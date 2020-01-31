@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BrowserFake } from "webextensions-api-fake";
-import { Background } from "~/background";
+import { Background } from "~/background/lib";
 import { JSDOM } from "jsdom";
 import { BackgroundHelper } from "./background.helper";
 
@@ -12,6 +12,7 @@ declare global {
       window: Window;
       document: any;
       chrome: any;
+      jsdom: JSDOM;
     }
   }
 
@@ -20,7 +21,6 @@ declare global {
       browser: BrowserFake;
       riot: BrowserFake;
       background: Background;
-      dom: JSDOM;
       clock: sinon.SinonFakeTimers;
       helper: BackgroundHelper;
     }

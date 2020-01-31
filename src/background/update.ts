@@ -1,8 +1,12 @@
-import { Background } from "~/background";
+import { Background } from "~/background/lib";
 import { Logger } from "~/log";
 
 interface ActiveTab {
   tabId: number;
+  hash: string;
+}
+
+interface UpdateTab extends browser.tabs.Tab {
   hash: string;
 }
 
@@ -15,11 +19,11 @@ export class Update extends Logger {
     this.bg = bg;
   }
 
-  async maybeUpdated(): Promise<void> {
+  async maybeUpdated(): Promise<boolean> {
     const { debug } = this.logScope("maybeUpdated");
     const { update } = await browser.storage.local.get("update");
     if (!update) {
-      return;
+      return false;
     }
 
     debug("Updated", update);
@@ -28,13 +32,9 @@ export class Update extends Logger {
       const windowIds = windows.map(window => window.id);
 
       await Promise.all(
-        update.tabs.map((tab: any) => {
+        update.tabs.map((tab: UpdateTab) => {
           debug("Reopening tab", tab);
-          let url = this.bg.webappPath;
-          if (tab.hash) {
-            url += tab.hash;
-          }
-          tab.url = url;
+          tab.url = this.bg.webappPath + tab.hash;
           delete tab.hash;
 
           if (this.bg.browserType !== "firefox") {
@@ -55,11 +55,11 @@ export class Update extends Logger {
         })
       );
     } catch (error) {
-      debug("Reopening tabs after update failed", error);
-      throw error;
+      throw new Error("Reopening tabs after update failed");
     }
 
     await browser.storage.local.remove("update");
+    return true;
   }
 
   handleUpdateAvailable(details: { version: string }): void {
@@ -69,7 +69,6 @@ export class Update extends Logger {
   }
 
   async installUpdate(): Promise<void> {
-    const { debug } = this.logScope("installUpdate");
     try {
       this.activeTabs = [];
       await browser.runtime.sendMessage({ method: "activeTabs" });
@@ -103,8 +102,7 @@ export class Update extends Logger {
       this.activeTabs = [];
       browser.runtime.reload();
     } catch (error) {
-      debug("updating failed", error.toString());
-      throw error;
+      throw new Error("updating failed");
     }
   }
 

@@ -1,5 +1,7 @@
+import * as BackgroundLib from "~/background/lib";
 import { BackgroundHelper } from "./background.helper";
-import { expect, browserTypes } from "./common";
+import { expect, sinon, browserTypes } from "./common";
+import { ImportMock } from "ts-mock-imports";
 
 browserTypes.map(browserType => {
   describe(`Background: ${browserType}`, function() {
@@ -34,4 +36,13 @@ browserTypes.map(browserType => {
       expect(version).to.equal("1.2.3");
     });
   });
+});
+
+it("should initialize", async function() {
+  const backgroundMock = ImportMock.mockClass(BackgroundLib, "Background");
+  const initializeStub = backgroundMock.mock("initialize");
+  await import("~/background");
+
+  expect(initializeStub).to.have.been.calledOnce;
+  backgroundMock.restore();
 });

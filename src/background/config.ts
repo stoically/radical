@@ -1,5 +1,5 @@
 import riotConfigBundled from "~/../riot-web/config.sample.json";
-import { Background } from "~/background";
+import { Background } from "~/background/lib";
 import { RiotConfig } from "~/types";
 
 export class Config {

@@ -1,10 +1,17 @@
 import { Logger } from "~/log";
 import { webRequestOnHeadersReceivedCallbackDetails } from "~/types-browser";
-import { Background } from "~/background";
+import { Background } from "~/background/lib";
 
-type SsoResponseListener = (
+type ResponseListener = (
   details: webRequestOnHeadersReceivedCallbackDetails
 ) => Promise<browser.webRequest.BlockingResponse>;
+
+interface ResponseListenerFactory {
+  create: () => ResponseListener;
+  timeout?: NodeJS.Timeout;
+}
+
+const LISTENER_TIMEOUT_MS = 60 * 60 * 1000;
 
 export class SSO extends Logger {
   private bg: Background;
@@ -23,7 +30,7 @@ export class SSO extends Logger {
     debug(url, responsePattern);
 
     browser.webRequest.onHeadersReceived.addListener(
-      this.createResponseListener(tabId),
+      this.responseListener(tabId).create(),
       { urls: [responsePattern] },
       ["responseHeaders"]
     );
@@ -32,45 +39,45 @@ export class SSO extends Logger {
     await browser.tabs.update(tabId, { url });
   }
 
-  createResponseListener(tabId: number): SsoResponseListener {
-    let listenerTimeout: false | NodeJS.Timeout = false;
-    const listener: SsoResponseListener = async (
-      details: webRequestOnHeadersReceivedCallbackDetails
-    ) => {
-      const { debug } = this.logScope("ssoResponseListener");
-      debug("incoming", details.url);
+  responseListener(tabId: number): ResponseListenerFactory {
+    const { debug } = this.logScope("responseListener");
+    return {
+      create(): ResponseListener {
+        const listener = async (
+          details: webRequestOnHeadersReceivedCallbackDetails
+        ): Promise<browser.webRequest.BlockingResponse> => {
+          debug("incoming", details.url);
 
-      if (!listenerTimeout) {
-        listenerTimeout = setTimeout(() => {
-          // remove listener after an hour in case the sso flow is interrupted
+          const location = details.responseHeaders?.find(
+            responseHeader => responseHeader.name.toLowerCase() === "location"
+          );
+          if (!location?.value) {
+            debug("no location header");
+            return {};
+          }
+
+          const url = new URL(location.value);
+          debug("location header found", url.origin);
+          if (!browser.runtime.getURL("/").startsWith(url.origin)) {
+            debug("location does not point to the extension, ignoring");
+            return {};
+          }
+
+          debug("location points to the extension, redirecting tab", tabId);
           browser.webRequest.onHeadersReceived.removeListener(listener);
-          debug("sso timed out");
-        }, 60 * 60 * 1000);
-        debug("registered 1h timeout");
-      }
+          this.timeout && clearTimeout(this.timeout);
+          await browser.tabs.update(tabId, { url: location.value });
+          return {};
+        };
 
-      const location = details.responseHeaders?.find(
-        responseHeader => responseHeader.name.toLowerCase() === "location"
-      );
-      if (!location?.value) {
-        debug("no location header");
-        return {};
-      }
+        this.timeout = setTimeout(() => {
+          debug("listener timed out");
+          browser.webRequest.onHeadersReceived.removeListener(listener);
+        }, LISTENER_TIMEOUT_MS);
+        debug("registered listener timeout", LISTENER_TIMEOUT_MS);
 
-      const url = new URL(location.value);
-      debug("location header found", url.origin);
-      if (!browser.runtime.getURL("/").startsWith(url.origin)) {
-        debug("location does not point to the extension, ignoring");
-        return {};
-      }
-
-      debug("location points to the extension, redirecting tab", tabId);
-      browser.webRequest.onHeadersReceived.removeListener(listener);
-      clearTimeout(listenerTimeout);
-      await browser.tabs.update(tabId, { url: location.value });
-      return {};
+        return listener;
+      },
     };
-
-    return listener;
   }
 }
