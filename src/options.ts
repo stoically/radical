@@ -62,7 +62,7 @@ const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
       }
       await browser.storage.local.remove("riotConfigDefault");
       await setConfigEditor(editor);
-      message.innerText = "Sucessfully reset to default";
+      message.innerText = "Successfully reset to default";
     } catch (error) {
       message.innerText = `Resetting failed: ${error.toString()}`;
       throw error;

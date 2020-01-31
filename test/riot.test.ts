@@ -20,14 +20,14 @@ browserTypes.map(browserType => {
       const tab = await browser.tabs._create({});
       browser.tabs.getCurrent.returns(tab);
       const [promise] = (browser.runtime.onMessage.addListener.yield({
-        method: "activeTabs"
+        method: "activeTabs",
       }) as unknown) as Promise<any>[];
       await promise;
 
       expect(browser.runtime.sendMessage).to.have.been.calledOnceWithExactly({
         method: "activeTab",
         tabId: tab.id,
-        hash: "#foo"
+        hash: "#foo",
       });
     });
 
