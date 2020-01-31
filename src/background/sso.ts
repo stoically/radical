@@ -1,11 +1,19 @@
 import { Logger } from "~/log";
 import { webRequestOnHeadersReceivedCallbackDetails } from "~/types-browser";
+import { Background } from "~/background";
 
 type SsoResponseListener = (
   details: webRequestOnHeadersReceivedCallbackDetails
 ) => Promise<browser.webRequest.BlockingResponse>;
 
 export class SSO extends Logger {
+  private bg: Background;
+
+  constructor(bg: Background) {
+    super();
+    this.bg = bg;
+  }
+
   async handleLogin(
     url: string,
     responsePattern: string,

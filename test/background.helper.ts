@@ -61,9 +61,7 @@ export class BackgroundHelper {
     this.context.clock.restore();
     this.injectScriptStub.restore();
 
-    delete this.context.dom;
-    delete this.context.browser;
-    delete this.context.riot;
+    delete this.context;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
