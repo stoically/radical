@@ -2,7 +2,7 @@
 import { injectScript } from "./utils";
 import { Logger } from "./log";
 const logger = new Logger();
-const log = logger.logger("[WebExtension Initializer]");
+const log = logger.logScope("[WebExtension Initializer]");
 
 declare global {
   interface Window {
@@ -20,7 +20,7 @@ export const listener = (browser: any): void => {
         (async (): Promise<void> => {
           const tab = await browser.tabs.getCurrent();
           if (!tab) {
-            log.debug("[WebExtension Initializer] could not getCurrent() tab");
+            log.error("[WebExtension Initializer] could not getCurrent() tab");
             return;
           }
           log.debug("[WebExtension Initializer] Current tab", tab);

@@ -19,7 +19,7 @@ export class SSO extends Logger {
     responsePattern: string,
     tabId: number
   ): Promise<void> {
-    const { debug } = this.logger("handleSsoLogin");
+    const { debug } = this.logScope("handleSsoLogin");
     debug(url, responsePattern);
 
     browser.webRequest.onHeadersReceived.addListener(
@@ -37,7 +37,7 @@ export class SSO extends Logger {
     const listener: SsoResponseListener = async (
       details: webRequestOnHeadersReceivedCallbackDetails
     ) => {
-      const { debug } = this.logger("ssoResponseListener");
+      const { debug } = this.logScope("ssoResponseListener");
       debug("incoming", details.url);
 
       if (!listenerTimeout) {

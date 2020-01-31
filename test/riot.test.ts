@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import { ImportMock } from "ts-mock-imports";
 import browserFake from "webextensions-api-fake";
 
-import { html, expect, browserTypes } from "./common";
+import { html, expect, browserTypes, sendMessage } from "./common";
 import * as utils from "~/utils";
 
 import * as riot from "~/riot";
@@ -19,10 +19,9 @@ browserTypes.map(browserType => {
       global.window.location.hash = "foo";
       const tab = await browser.tabs._create({});
       browser.tabs.getCurrent.returns(tab);
-      const [promise] = (browser.runtime.onMessage.addListener.yield({
+      await sendMessage(browser, {
         method: "activeTabs",
-      }) as unknown) as Promise<any>[];
-      await promise;
+      });
 
       expect(browser.runtime.sendMessage).to.have.been.calledOnceWithExactly({
         method: "activeTab",

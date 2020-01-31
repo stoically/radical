@@ -22,7 +22,7 @@ export class Background extends Logger {
 
   constructor() {
     super();
-    this.logger("constructor").debug("Browser:", this.browserType);
+    this.logScope("constructor").debug("Browser:", this.browserType);
 
     // TODO: move into persistent event handler wrapper
     browser.runtime.onInstalled.addListener(this.handleInstalled.bind(this));
@@ -40,7 +40,7 @@ export class Background extends Logger {
     reason: browser.runtime.OnInstalledReason;
     temporary: boolean;
   }): Promise<browser.tabs.Tab | undefined> {
-    const { debug } = this.logger("handleInstalled");
+    const { debug } = this.logScope("handleInstalled");
     debug("onInstalled", details);
     switch (details.reason) {
       case "install":
@@ -58,7 +58,7 @@ export class Background extends Logger {
     message: Message,
     sender: browser.runtime.MessageSender
   ): MessageResponse {
-    const { debug } = this.logger("handleMessage");
+    const { debug } = this.logScope("handleMessage");
     debug("Incoming message", message);
 
     switch (message.method) {
@@ -92,7 +92,7 @@ export class Background extends Logger {
   }
 
   async createTab(): Promise<browser.tabs.Tab> {
-    const { debug } = this.logger("createTab");
+    const { debug } = this.logScope("createTab");
     debug("Creating riot tab");
     return browser.tabs.create({
       url: this.webappPath,

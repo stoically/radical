@@ -16,7 +16,7 @@ export class Update extends Logger {
   }
 
   async maybeUpdated(): Promise<void> {
-    const { debug } = this.logger("maybeUpdated");
+    const { debug } = this.logScope("maybeUpdated");
     const { update } = await browser.storage.local.get("update");
     if (!update) {
       return;
@@ -45,7 +45,7 @@ export class Update extends Logger {
             return browser.tabs.create(tab);
           } else {
             const createData: { url: string; cookieStoreId?: string } = {
-              url: tab.url
+              url: tab.url,
             };
             if (this.bg.browserType === "firefox") {
               createData.cookieStoreId = tab.cookieStoreId;
@@ -63,13 +63,13 @@ export class Update extends Logger {
   }
 
   handleUpdateAvailable(details: { version: string }): void {
-    const { debug } = this.logger("handleUpdateAvailable");
+    const { debug } = this.logScope("handleUpdateAvailable");
     debug("Update available", details);
     this.bg.version = details.version;
   }
 
   async installUpdate(): Promise<void> {
-    const { debug } = this.logger("installUpdate");
+    const { debug } = this.logScope("installUpdate");
     try {
       this.activeTabs = [];
       await browser.runtime.sendMessage({ method: "activeTabs" });
@@ -88,7 +88,7 @@ export class Update extends Logger {
             windowId: tab.windowId,
             hash,
             cookieStoreId:
-              this.bg.browserType === "firefox" ? tab.cookieStoreId : false
+              this.bg.browserType === "firefox" ? tab.cookieStoreId : false,
           };
         })
       );
@@ -96,8 +96,8 @@ export class Update extends Logger {
       await browser.storage.local.set({
         update: {
           version: this.bg.version,
-          tabs
-        }
+          tabs,
+        },
       });
 
       this.activeTabs = [];
