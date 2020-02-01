@@ -71,7 +71,6 @@ export const run = async (): Promise<void> => {
 };
 
 export const initialize = async (): Promise<void> => {
-  console.log("???");
   if (typeof browser === "undefined") {
     await injectScript("/browser-polyfill.min.js");
   }
