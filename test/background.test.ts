@@ -1,6 +1,6 @@
 import * as BackgroundLib from "~/background/lib";
 import { BackgroundHelper } from "./background.helper";
-import { expect, sinon, browserTypes } from "./common";
+import { expect, browserTypes } from "./common";
 import { ImportMock } from "ts-mock-imports";
 
 browserTypes.map(browserType => {

@@ -31,6 +31,7 @@ export class Update extends Logger {
       const windows = await browser.windows.getAll();
       const windowIds = windows.map(window => window.id);
 
+      // TODO: Promise.allSettled & catch in the map
       await Promise.all(
         update.tabs.map((tab: UpdateTab) => {
           debug("Reopening tab", tab);
@@ -55,7 +56,9 @@ export class Update extends Logger {
         })
       );
     } catch (error) {
-      throw new Error("Reopening tabs after update failed");
+      throw new Error(
+        `Reopening tabs after update failed: ${error.toString()}`
+      );
     }
 
     await browser.storage.local.remove("update");
@@ -77,6 +80,7 @@ export class Update extends Logger {
       // workaround for sendMessage not supporting multiple return messages
       await new Promise(resolve => setTimeout(resolve, 500));
 
+      // TODO: Promise.allSettled & catch in the map
       const tabs = await Promise.all(
         this.activeTabs.map(async ({ tabId, hash }) => {
           const tab = await browser.tabs.get(tabId);
@@ -102,7 +106,7 @@ export class Update extends Logger {
       this.activeTabs = [];
       browser.runtime.reload();
     } catch (error) {
-      throw new Error("updating failed");
+      throw new Error(`updating failed: ${error.toString()}`);
     }
   }
 

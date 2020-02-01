@@ -4,12 +4,6 @@ import { Config } from "./config";
 import { Update } from "./update";
 import { SSO } from "./sso";
 
-declare global {
-  interface Window {
-    background: Background;
-  }
-}
-
 export class Background extends Logger {
   public webappPath = "/riot/index.html";
   public manifest = browser.runtime.getManifest();
@@ -24,6 +18,7 @@ export class Background extends Logger {
     super();
     // listeners must be set up sync
     // TODO: move into persistent event handler wrapper
+    this.logScope("constructor").debug("Browser:", this.browserType);
     browser.runtime.onInstalled.addListener(this.handleInstalled.bind(this));
     browser.runtime.onMessage.addListener(this.handleMessage.bind(this));
     browser.runtime.onUpdateAvailable.addListener(
@@ -33,7 +28,7 @@ export class Background extends Logger {
   }
 
   initialize(): this {
-    this.logScope("constructor").debug("Browser:", this.browserType);
+    this.logScope("initialize").debug("Initializing");
     browser.storage.local.set({ version: this.version });
     this.update.maybeUpdated();
     return this;
