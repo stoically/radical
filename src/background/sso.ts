@@ -66,6 +66,7 @@ export class SSO extends Logger {
           debug("location points to the extension, redirecting tab", tabId);
           browser.webRequest.onHeadersReceived.removeListener(listener);
           this.timeout && clearTimeout(this.timeout);
+          // TODO: remove permissions
           await browser.tabs.update(tabId, { url: location.value });
           return {};
         };
@@ -73,6 +74,7 @@ export class SSO extends Logger {
         this.timeout = setTimeout(() => {
           debug("listener timed out");
           browser.webRequest.onHeadersReceived.removeListener(listener);
+          // TODO: remove permissions
         }, LISTENER_TIMEOUT_MS);
         debug("registered listener timeout", LISTENER_TIMEOUT_MS);
 

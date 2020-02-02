@@ -94,9 +94,6 @@
     "project": "tsconfig.json"
   },
   "nyc": {
-    "exclude": [
-      "test/**/*.ts"
-    ],
     "reporter": [
       "html",
       "text",
