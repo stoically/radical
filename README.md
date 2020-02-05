@@ -17,14 +17,12 @@ It's planned to hopefully get WebExtensions support merged upstream at some poin
 - Riot Web served entirely locally without the need for additional setup
 - Ability to edit Riot Web's "config.json" in the Add-on preferences
 
-
 ## Development
 
 yarn is required to build riot-web.
 
 ```shell
 npm install
-npm run riot-web:fetch-develop
 npm run dev
 ```
 

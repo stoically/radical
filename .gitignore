@@ -3,7 +3,6 @@
 /build
 /dist
 /.cache
-/web-ext-artifacts
 /.nyc_output
 /coverage
 /reproducible/build
