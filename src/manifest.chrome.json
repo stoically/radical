@@ -2,7 +2,7 @@
   "description": "Decentralised, encrypted chat & collaboration powered by Matrix",
   "manifest_version": 2,
   "name": "Riot",
-  "version": "1.5.8.4",
+  "version": "1.5.8.5",
   "content_security_policy": "script-src 'self' 'wasm-eval' https://www.recaptcha.net https://www.gstatic.com; object-src 'self'",
   "icons": {
     "48": "vector-icons/riot48.png",
