@@ -3,7 +3,6 @@
   "manifest_version": 2,
   "name": "Riot",
   "version": "1.5.8.4",
-  "content_security_policy": "script-src 'self' https://www.recaptcha.net https://www.gstatic.com; object-src 'self';",
   "icons": {
     "48": "vector-icons/riot48.png",
     "96": "vector-icons/riot96.png"
