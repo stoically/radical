@@ -14,6 +14,14 @@ export class Config {
       "riotConfigDefault",
     ]);
 
-    return riotConfigDefault || riotConfigBundled;
+    const config = riotConfigDefault || riotConfigBundled;
+
+    // due to remote code execution limitations in AMO policies we
+    // force-deactivate piwik
+    if (this.bg.browserType === "firefox") {
+      config.piwik = false;
+    }
+
+    return config;
   }
 }
