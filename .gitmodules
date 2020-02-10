@@ -4,3 +4,6 @@
 [submodule "matrix-react-sdk"]
 	path = matrix-react-sdk
 	url = https://github.com/stoically/matrix-react-sdk.git
+[submodule "matrix-js-sdk"]
+	path = matrix-js-sdk
+	url = https://github.com/matrix-org/matrix-js-sdk.git
