@@ -14,7 +14,7 @@ declare global {
 }
 
 interface Message {
-  method: "activeTabs";
+  type: "activeTabs";
 }
 
 export const listener = (browser: BrowserType): void => {
@@ -22,14 +22,14 @@ export const listener = (browser: BrowserType): void => {
   browser.runtime.onMessage.addListener((message: Message) => {
     log.debug("[WebExtension Initializer] Incoming message", message);
 
-    switch (message.method) {
+    switch (message.type) {
       case "activeTabs":
         (async (): Promise<void> => {
           const tab = await browser.tabs.getCurrent();
           log.debug("[WebExtension Initializer] Current tab", tab);
 
           browser.runtime.sendMessage({
-            method: "activeTab",
+            type: "activeTab",
             tabId: tab.id,
             hash: window.location.hash,
           });

@@ -19,11 +19,11 @@ browserTypes.map(browserType => {
       const tab = await browser.tabs._create({});
       browser.tabs.getCurrent.returns(tab);
       await sendMessage(browser, {
-        method: "activeTabs",
+        type: "activeTabs",
       });
 
       expect(browser.runtime.sendMessage).to.have.been.calledOnceWithExactly({
-        method: "activeTab",
+        type: "activeTab",
         tabId: tab.id,
         hash: "#foo",
       });

@@ -16,7 +16,7 @@ browserTypes.map(browserType => {
       const url = "https://example.org/sso/login";
       const responsePattern = "https://example.org/*";
       await this.helper.sendMessage({
-        method: "ssoLogin",
+        type: "ssoLogin",
         url,
         responsePattern,
       });
@@ -47,7 +47,7 @@ browserTypes.map(browserType => {
       const url = "https://example.org/sso/login";
       const responsePattern = "https://example.org/*";
       await this.helper.sendMessage({
-        method: "ssoLogin",
+        type: "ssoLogin",
         url,
         responsePattern,
       });
@@ -61,7 +61,7 @@ browserTypes.map(browserType => {
       const url = "https://example.org/sso/login";
       const responsePattern = "https://example.org/*";
       await this.helper.sendMessage({
-        method: "ssoLogin",
+        type: "ssoLogin",
         url,
         responsePattern,
       });
@@ -80,7 +80,7 @@ browserTypes.map(browserType => {
       const url = "https://example.org/sso/login";
       const responsePattern = "https://example.org/*";
       await this.helper.sendMessage({
-        method: "ssoLogin",
+        type: "ssoLogin",
         url,
         responsePattern,
       });
@@ -101,7 +101,7 @@ browserTypes.map(browserType => {
     it("should throw an error when internal message sender is missing", async function() {
       const promise = this.helper.sendMessage(
         {
-          method: "ssoLogin",
+          type: "ssoLogin",
           url: "fake",
           responsePattern: "fake",
         },

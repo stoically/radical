@@ -74,7 +74,7 @@ export class Update extends Logger {
   async installUpdate(): Promise<void> {
     try {
       this.activeTabs = [];
-      await browser.runtime.sendMessage({ method: "activeTabs" });
+      await browser.runtime.sendMessage({ type: "activeTabs" });
 
       // give tabs 500ms to respond
       // workaround for sendMessage not supporting multiple return messages

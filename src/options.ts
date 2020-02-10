@@ -8,7 +8,7 @@ declare global {
 }
 
 const setConfigEditor = async (editor: JSONEditor): Promise<void> => {
-  const config = await browser.runtime.sendMessage({ method: "config" });
+  const config = await browser.runtime.sendMessage({ type: "config" });
   editor.set(config);
 };
 

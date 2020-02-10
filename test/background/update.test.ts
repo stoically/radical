@@ -14,7 +14,7 @@ browserTypes.map(browserType => {
 
     it("should respond with new version after update", async function() {
       this.helper.updateAvailable("1.2.4");
-      const version = await this.helper.sendMessage({ method: "version" });
+      const version = await this.helper.sendMessage({ type: "version" });
 
       expect(version).to.equal("1.2.4");
     });
@@ -23,7 +23,7 @@ browserTypes.map(browserType => {
       this.helper.updateAvailable();
       const tab = await this.helper.createTab();
       const messagePromise = this.helper.sendMessage({
-        method: "installUpdate",
+        type: "installUpdate",
       });
       await this.helper.afterClock(messagePromise);
       expect(this.browser.runtime.reload).to.have.been.calledOnce;
@@ -59,7 +59,7 @@ browserTypes.map(browserType => {
       this.helper.updateAvailable();
       const tab = await this.helper.createTab();
       const messagePromise = this.helper.sendMessage({
-        method: "installUpdate",
+        type: "installUpdate",
       });
       await this.helper.afterClock(messagePromise);
       this.browser.sinonSandbox.resetHistory();
@@ -80,7 +80,7 @@ browserTypes.map(browserType => {
     it("should throw if there is an error while installing update", async function() {
       this.browser.tabs.get.rejects();
       const messagePromise = this.helper.sendMessage({
-        method: "installUpdate",
+        type: "installUpdate",
       });
       await expect(this.helper.afterClock(messagePromise)).to.eventually.be
         .rejected;
@@ -96,7 +96,7 @@ browserTypes.map(browserType => {
       this.helper.updateAvailable();
       await this.helper.createTab();
       const messagePromise = this.helper.sendMessage({
-        method: "installUpdate",
+        type: "installUpdate",
       });
       await this.helper.afterClock(messagePromise);
       this.browser.sinonSandbox.resetHistory();

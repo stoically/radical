@@ -60,7 +60,7 @@ export class Background extends Logger {
     const log = this.logScope("handleMessage");
     log.debug("Incoming message", message);
 
-    switch (message.method) {
+    switch (message.type) {
       case "version":
         return this.version;
 

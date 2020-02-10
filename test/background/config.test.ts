@@ -16,7 +16,7 @@ browserTypes.map(browserType => {
 
     it("should return the default config", async function() {
       const config = (await this.helper.sendMessage({
-        method: "config",
+        type: "config",
       })) as MessageConfigResponse;
       expect(config.brand).to.be.equal("Riot");
     });
@@ -26,7 +26,7 @@ browserTypes.map(browserType => {
         riotConfigDefault: { brand: "Custom" },
       });
       const config = (await this.helper.sendMessage({
-        method: "config",
+        type: "config",
       })) as MessageConfigResponse;
       expect(config.brand).to.be.equal("Custom");
     });
@@ -34,7 +34,7 @@ browserTypes.map(browserType => {
     if (browserType === "firefox") {
       it("should disable piwik in firefox", async function() {
         const config = (await this.helper.sendMessage({
-          method: "config",
+          type: "config",
         })) as MessageConfigResponse;
         expect(config.piwik).to.be.equal(false);
       });

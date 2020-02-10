@@ -3,25 +3,25 @@ import { BrowserFake } from "webextensions-api-fake";
 export type RiotConfig = { [key: string]: string | boolean };
 
 export interface MessageVersion {
-  method: "version";
+  type: "version";
 }
 
 export interface MessageInstallUpdate {
-  method: "installUpdate";
+  type: "installUpdate";
 }
 
 export interface MessageActiveTab {
-  method: "activeTab";
+  type: "activeTab";
   tabId: number;
   hash: string;
 }
 
 export interface MessageConfig {
-  method: "config";
+  type: "config";
 }
 
 export interface MessageSsoLogin {
-  method: "ssoLogin";
+  type: "ssoLogin";
   url: string;
   responsePattern: string;
 }
@@ -31,13 +31,14 @@ export type Message =
   | MessageInstallUpdate
   | MessageActiveTab
   | MessageConfig
-  | MessageSsoLogin;
+  | MessageSsoLogin
+  | MessageSeshat;
 
 export type MessageVersionResponse = string;
 export type MessageConfigResponse = RiotConfig;
 
 export type MessageResponse = Promise<
-  MessageVersionResponse | MessageConfigResponse | void
+  MessageVersionResponse | MessageConfigResponse | boolean | void
 >;
 
 export type BrowserType = typeof browser | BrowserFake;

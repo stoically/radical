@@ -31,7 +31,7 @@ browserTypes.map(browserType => {
     });
 
     it("should respond with manifest version", async function() {
-      const version = await this.helper.sendMessage({ method: "version" });
+      const version = await this.helper.sendMessage({ type: "version" });
 
       expect(version).to.equal("1.2.3");
     });
