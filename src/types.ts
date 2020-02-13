@@ -26,6 +26,11 @@ export interface MessageSsoLogin {
   responsePattern: string;
 }
 
+export interface MessageSeshat {
+  type: "seshat";
+  content: any;
+}
+
 export type Message =
   | MessageVersion
   | MessageInstallUpdate

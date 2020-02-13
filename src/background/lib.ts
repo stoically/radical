@@ -3,6 +3,7 @@ import { Message, MessageResponse } from "../types.js";
 import { Config } from "./config";
 import { Update } from "./update";
 import { SSO } from "./sso";
+import { Seshat } from "./seshat";
 
 export class Background extends Logger {
   public webappPath = "/riot/index.html";
@@ -13,6 +14,7 @@ export class Background extends Logger {
   public config = new Config(this);
   public update = new Update(this);
   public sso = new SSO(this);
+  public seshat = new Seshat();
 
   constructor() {
     super();
@@ -86,6 +88,9 @@ export class Background extends Logger {
           message.responsePattern,
           sender.tab.id
         );
+
+      case "seshat":
+        return this.seshat.handleMessage(message);
     }
   }
 
