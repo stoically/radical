@@ -7,7 +7,6 @@
 [Riot Web](https://github.com/vector-im/riot-web) bundled as WebExtension.
 
 - Firefox AMO: https://addons.mozilla.org/firefox/addon/riot/
-- Chrome Store: https://chrome.google.com/webstore/detail/lgpdpggoahhnlmaiompkgghldllldcjh
 - Matrix Room: [#riot-webext:matrix.org](https://matrix.to/#/#riot-webext:matrix.org)
 
 It's planned to hopefully get WebExtensions support merged upstream at some point.
@@ -30,10 +29,6 @@ npm run dev
 
 - Load the build located in `build/firefox` as Temporary Add-on via
   `about:debugging#/runtime/this-firefox`
-
-### Chrome
-
-- Load the build located in `build/chrome` as Unpacked extension via `chrome://extensions/`
 
 ## Tests
 

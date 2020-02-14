@@ -24,7 +24,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - Browser [e.g. firefox, chrome]
+ - Browser [e.g. firefox]
  - Browser Version [e.g. 71]
  - Riot WebExtension Version [e.g. 1.5.7.1]
 

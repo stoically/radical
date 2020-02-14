@@ -11,12 +11,10 @@
     "build:matrix-react-sdk": "cd matrix-react-sdk && yarn link && yarn install",
     "build:riot-web": "cd riot-web && yarn link matrix-react-sdk && BUILD_TARGET=webext yarn build",
     "build:firefox": "npm run parcel:build -- -d build/firefox",
-    "build:chrome": "npm run parcel:build -- -d build/chrome",
     "build:copy": "./scripts/copy-riot-web.sh && ./scripts/copy-assets.sh",
     "dev": "run-p dev:*",
     "dev:copy": "./scripts/copy-assets.sh && nodemon -w src --ext '*' --exec \"./scripts/copy-assets.sh\"",
     "dev:firefox": "npm run parcel:watch -- -d build/firefox --cache-dir .cache/firefox",
-    "dev:chrome": "npm run parcel:watch -- -d build/chrome --cache-dir .cache/chrome",
     "dev:riot-web": "run-s dev:riot-web:*",
     "dev:riot-web:react-sdk": "cd matrix-react-sdk && git checkout webext-develop && yarn link && yarn install",
     "dev:riot-web:js-sdk": "cd matrix-js-sdk && git checkout develop && yarn link && yarn install",
@@ -29,14 +27,12 @@
     "dist:firefox": "run-s dist:firefox:*",
     "dist:firefox:lint": "web-ext lint -s build/firefox",
     "dist:firefox:build": "web-ext build -s build/firefox -a dist/firefox",
-    "dist:chrome": "mkdir -p dist/chrome && cd build/chrome && zip -r ../../dist/chrome/riot.zip .",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint **/*.ts",
     "lint:tsc": "tsc",
     "test": "ts-mocha --paths test/*.test.ts test/**/*.test.ts",
     "test:watch": "npm run test -- --watch",
     "test:watch:firefox": "BROWSER_TYPE=firefox npm run test -- --watch",
-    "test:watch:chrome": "BROWSER_TYPE=chrome npm run test -- --watch",
     "test:coverage": "nyc npm run test",
     "web-ext:run": "web-ext run -s build/firefox",
     "web-ext:dev": "npm run web-ext:run -- -f firefox-dev",
@@ -51,7 +47,6 @@
   "devDependencies": {
     "@types/chai": "^4.2.7",
     "@types/chai-as-promised": "^7.1.2",
-    "@types/chrome": "0.0.93",
     "@types/firefox-webext-browser": "^70.0.1",
     "@types/jsdom": "^12.2.4",
     "@types/jsoneditor": "^5.28.2",
@@ -86,8 +81,7 @@
     "webextensions-api-fake": "^1.2.0"
   },
   "browserslist": [
-    "Firefox >= 67",
-    "last 2 Chrome versions"
+    "Firefox >= 67"
   ],
   "prettier": {
     "trailingComma": "es5"

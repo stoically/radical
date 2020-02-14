@@ -14,7 +14,7 @@ export const html =
   "</head><body></body></html>";
 
 export const browserTypes = !process.env.BROWSER_TYPE
-  ? ["firefox", "chrome"]
+  ? ["firefox"]
   : [process.env.BROWSER_TYPE];
 
 export const sendMessage = (
