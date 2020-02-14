@@ -10,11 +10,12 @@ export class Background extends Logger {
   public manifest = browser.runtime.getManifest();
   public version = this.manifest.version;
   public browserType = this.manifest.applications?.gecko ? "firefox" : "chrome";
+  public runtimeURL = new URL(browser.runtime.getURL("/"));
 
   public config = new Config(this);
   public update = new Update(this);
   public sso = new SSO(this);
-  public seshat = new Seshat();
+  public seshat = new Seshat(this);
 
   constructor() {
     super();
@@ -61,6 +62,9 @@ export class Background extends Logger {
   ): MessageResponse {
     const log = this.logScope("handleMessage");
     log.debug("Incoming message", message);
+    if (!sender?.tab?.id) {
+      throw new Error("handleMessage: missing sender tab");
+    }
 
     switch (message.type) {
       case "version":
@@ -79,10 +83,6 @@ export class Background extends Logger {
         return this.config.get();
 
       case "ssoLogin":
-        if (!sender.tab?.id) {
-          throw new Error("ssoLogin: missing sender tab id");
-        }
-
         return this.sso.handleLogin(
           message.url,
           message.responsePattern,
@@ -90,7 +90,7 @@ export class Background extends Logger {
         );
 
       case "seshat":
-        return this.seshat.handleMessage(message);
+        return this.seshat.handleMessage(message, sender);
     }
   }
 

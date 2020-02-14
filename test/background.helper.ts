@@ -42,7 +42,10 @@ export class BackgroundHelper {
     context.browser.runtime.sendMessage.callsFake((...args) => {
       context.riot.runtime.onMessage.addListener.yield(...args);
     });
-    context.riot.runtime.sendMessage.callsFake((...args) => {
+    context.riot.runtime.sendMessage.callsFake(async (...args) => {
+      if (!args[1]) {
+        args.push({ tab: this.defaultTab });
+      }
       context.browser.runtime.onMessage.addListener.yield(...args);
     });
     global.browser = context.browser;
