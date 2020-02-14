@@ -51,5 +51,3 @@ npm run dist
 ## Disclaimer
 
 Not an official project from [New Vector](https://vector.im/)!
-
-Usage of the Riot icon is [officially permitted](https://matrix.to/#/!xYvNcQPhnkrdUmYczI:matrix.org/$lvRXRVIzCrv7RtFLYQmW5eAqImYQvMHDach_Rr1c6Hg?via=matrix.org&via=feneas.org&via=kde.org).
