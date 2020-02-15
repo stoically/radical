@@ -14,7 +14,7 @@ export class Background extends Logger {
 
   public config = new Config();
   public update = new Update(this);
-  public sso = new SSO(this);
+  public sso = new SSO();
   public seshat = new Seshat(this);
 
   constructor() {

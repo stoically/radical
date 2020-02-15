@@ -14,13 +14,6 @@ interface ResponseListenerFactory {
 const LISTENER_TIMEOUT_MS = 15 * 60 * 1000;
 
 export class SSO extends Logger {
-  private bg: Background;
-
-  constructor(bg: Background) {
-    super();
-    this.bg = bg;
-  }
-
   async handleLogin(
     url: string,
     responsePattern: string,
