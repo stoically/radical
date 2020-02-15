@@ -1,22 +1,25 @@
+import { Logger } from "~/log";
 import { Background } from "./lib";
 
-const BOOSTER_PACK_ID = "@riot-booster-pack";
+const RADICAL_NATIVE_ID = "@radical-native";
 
-export class Seshat {
-  private boosterPackReady = false;
+export class Seshat extends Logger {
+  private radicalNativeReady = false;
   private bg: Background;
 
   constructor(bg: Background) {
+    super();
     this.bg = bg;
 
     browser.runtime.onMessageExternal.addListener(
       (message: any, sender: browser.runtime.MessageSender) => {
-        if (sender.id !== BOOSTER_PACK_ID) {
+        this.logScope("onMessageExternal").debug("incoming", message, sender);
+        if (sender.id !== RADICAL_NATIVE_ID) {
           throw new Error("Permission denied");
         }
 
         if (message?.method === "ready") {
-          this.boosterPackReady = true;
+          this.radicalNativeReady = true;
         }
       }
     );
@@ -26,7 +29,7 @@ export class Seshat {
     message: any,
     sender: browser.runtime.MessageSender
   ): Promise<any> {
-    if (!this.boosterPackReady) {
+    if (!this.radicalNativeReady) {
       // riot might call us without asking supportsEventIndexing first, so we
       // no-op in this case
       return;
@@ -41,13 +44,13 @@ export class Seshat {
 
     switch (message.method) {
       case "supportsEventIndexing":
-        if (!this.boosterPackReady) {
+        if (!this.radicalNativeReady) {
           return false;
         }
       // fallthrough
 
       default:
-        return browser.runtime.sendMessage(BOOSTER_PACK_ID, message);
+        return browser.runtime.sendMessage(RADICAL_NATIVE_ID, message);
     }
   }
 }
