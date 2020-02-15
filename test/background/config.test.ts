@@ -1,7 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { browserTypes, expect } from "test/common";
 import { BackgroundHelper } from "test/background.helper";
 import { MessageConfigResponse } from "~/types";
-import decache from "decache";
 
 browserTypes.map(browserType => {
   describe(`Background Config: ${browserType}`, function() {
@@ -11,33 +11,24 @@ browserTypes.map(browserType => {
 
     afterEach(function() {
       this.helper.cleanup();
-      decache("~/../riot-web/config.sample.json");
     });
 
     it("should return the default config", async function() {
       const config = (await this.helper.sendMessage({
         type: "config",
       })) as MessageConfigResponse;
-      expect(config.brand).to.be.equal("Riot");
+      console.log(config)
+      expect(config.default_server_config["m.homeserver"].server_name).to.be.equal("matrix.org");
     });
 
     it("should return the custom config if modified", async function() {
       await this.browser.storage.local.set({
-        riotConfigDefault: { brand: "Custom" },
+        riotConfigDefault: { custom: "toggle" },
       });
       const config = (await this.helper.sendMessage({
         type: "config",
       })) as MessageConfigResponse;
-      expect(config.brand).to.be.equal("Custom");
+      expect(config.custom).to.be.equal("toggle");
     });
-
-    if (browserType === "firefox") {
-      it("should disable piwik in firefox", async function() {
-        const config = (await this.helper.sendMessage({
-          type: "config",
-        })) as MessageConfigResponse;
-        expect(config.piwik).to.be.equal(false);
-      });
-    }
   });
 });

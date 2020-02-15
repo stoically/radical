@@ -14,7 +14,8 @@
 
 import { BrowserFake } from "webextensions-api-fake";
 
-export type RiotConfig = { [key: string]: string | boolean };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RiotConfig = { [key: string]: any };
 
 export interface MessageVersion {
   type: "version";
