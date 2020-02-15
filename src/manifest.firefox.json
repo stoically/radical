@@ -1,7 +1,7 @@
 {
-  "description": "Decentralised, encrypted chat & collaboration powered by Matrix",
+  "description": "Decentralised, encrypted chat & collaboration powered by Riot Web and Matrix",
   "manifest_version": 2,
-  "name": "Riot",
+  "name": "Radical",
   "version": "1.5.9rc1",
   "icons": {
     "48": "vector-icons/riot48.png",
@@ -11,7 +11,7 @@
     "default_icon": {
       "32": "vector-icons/riot32.png"
     },
-    "default_title": "Riot"
+    "default_title": "Radical"
   },
   "options_ui": {
     "page": "options.html"

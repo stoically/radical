@@ -1,5 +1,5 @@
 {
-  "name": "riot-webext",
+  "name": "radical-web",
   "private": true,
   "scripts": {
     "install": "run-s submodule:* riot-web:install",
