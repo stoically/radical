@@ -8,5 +8,3 @@ pwd
 mkdir -p build
 mkdir -p build/firefox/riot
 cp -r riot-web/webapp/* build/firefox/riot
-mkdir -p build/chrome/riot
-cp -r riot-web/webapp/* build/chrome/riot
