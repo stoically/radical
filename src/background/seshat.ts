@@ -40,6 +40,12 @@ export class Seshat {
     message: any,
     sender: browser.runtime.MessageSender
   ): Promise<any> {
+    if (!this.boosterPackReady) {
+      // riot might call us without asking supportsEventIndexing first, so we
+      // no-op in this case
+      return;
+    }
+
     const cookieStore =
       this.bg.browserType === "firefox"
         ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
