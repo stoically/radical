@@ -42,6 +42,7 @@ export interface MessageSsoLogin {
 
 export interface MessageSeshat {
   type: "seshat";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
 }
 

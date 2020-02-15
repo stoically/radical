@@ -26,7 +26,7 @@ export class Background extends Logger {
   public browserType = this.manifest.applications?.gecko ? "firefox" : "chrome";
   public runtimeURL = new URL(browser.runtime.getURL("/"));
 
-  public config = new Config(this);
+  public config = new Config();
   public update = new Update(this);
   public sso = new SSO(this);
   public seshat = new Seshat(this);
