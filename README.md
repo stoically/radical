@@ -13,6 +13,7 @@
 
 - Riot Web served entirely locally without the need for additional setup
 - Ability to edit Riot Web's "config.json" in the Add-on preferences
+- Search in encrypted rooms using [Radical Native](https://github.com/stoically/radical-native#readme)
 
 ## Development
 
