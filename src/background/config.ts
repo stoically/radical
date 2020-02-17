@@ -18,6 +18,10 @@ export class Config {
             base_url: "https://vector.im",
           },
         },
+        enable_presence_by_hs_url: {
+          "https://matrix.org": false,
+          "https://matrix-client.matrix.org": false,
+        },
       }
     );
   }
