@@ -15,6 +15,25 @@
 - Ability to edit Riot Web's "config.json" in the Add-on preferences
 - Search in encrypted rooms using [Radical Native](https://github.com/stoically/radical-native#readme)
 
+### Search
+
+1. Install [Radical Native](https://github.com/stoically/radical-native#install)
+2. Configure the Riot Web config in the Radical Add-on preferences to include
+
+  ```
+    "features": {
+      "feature_event_indexing": "enable"
+    }
+  ```
+
+3. Reload Riot Add-on tab, go to "Settings > Security & Privacy", there you should see a "Manage" button under "Message search", clicking it should show [ongoing work](https://github.com/vector-im/riot-web/issues/12334)
+
+#### Troubleshooting
+
+- See https://github.com/stoically/radical-native#troubleshooting
+- Try restarting Firefox with both Add-ons installed and enabled
+
+
 ## Development
 
 [yarn](https://yarnpkg.com/) is required to build riot-web.
