@@ -70,7 +70,7 @@ git checkout $JS_SDK_VERSION_TAG
 cd ..
 
 git add riot-web matrix-* src/manifest.*
-git commit -S -m "chore(release): $VERSION"
+git commit -S -m "chore(release): $VERSION_TAG"
 git push
 git tag $VERSION_TAG
 git push origin $VERSION_TAG
