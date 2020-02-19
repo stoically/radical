@@ -48,12 +48,16 @@ jobs:
 
           if [[ $VERSION == *"rc"* ]]; then
             npm run web-ext:sign:unlisted
+            echo "::set-output name=xpi::radical-$VERSION-an+fx.xpi"
+            echo "::set-output name=upload_xpi::true"
           else
-            npm run web-ext:sign:listed
+            npm run web-ext:sign:listed || true
+            echo "::set-output name=upload_xpi::false"
           fi
-          echo "::set-output name=xpi::radical-$VERSION-an+fx.xpi"
+          
 
       - name: upload xpi
+        if: steps.release.outputs.upload_xpi == 'true'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
