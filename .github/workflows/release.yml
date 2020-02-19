@@ -1,0 +1,74 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: extract version
+        id: extract_version
+        run: echo "::set-output name=version::${GITHUB_REF:11}"
+
+      - id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.extract_version.outputs.version }}
+          release_name: v${{ steps.extract_version.outputs.version }}
+          draft: true
+          prerelease: true
+
+      - name: zip src
+        run: |
+          npm run submodule:init
+          npm run submodule:update
+          zip -r radical-src .
+
+      - name: release
+        id: release
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+          VERSION: ${{ steps.extract_version.outputs.version }}
+        run: |
+          npm install
+          npm run build
+
+          if [[ $VERSION == *"rc"* ]]; then
+            npm run web-ext:sign:unlisted
+          else
+            npm run web-ext:sign:listed
+          fi
+          echo "::set-output name=xpi::radical-$VERSION-an+fx.xpi"
+
+      - name: upload xpi
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./web-ext-artifacts/${{ steps.release.outputs.xpi }}
+          asset_name: ${{ steps.release.outputs.xpi }}
+          asset_content_type: application/zip
+
+      - name: upload src
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./radical-src.zip
+          asset_name: radical-src.zip
+          asset_content_type: application/zip

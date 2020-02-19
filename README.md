@@ -61,9 +61,8 @@ npm run test
 ## Release
 
 ```shell
-npm install
-npm run build
-npm run dist
+# bump version in manifest.json
+./scripts/release.sh <version> [riot-web-version-tag]
 ```
 
 ## Disclaimer
