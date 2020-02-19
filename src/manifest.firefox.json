@@ -2,7 +2,7 @@
   "description": "Decentralised, encrypted chat & collaboration powered by Riot Web and Matrix",
   "manifest_version": 2,
   "name": "Radical",
-  "version": "1.5.9",
+  "version": "1.5.10",
   "icons": {
     "48": "vector-icons/riot48.png",
     "96": "vector-icons/riot96.png"
