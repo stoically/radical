@@ -2,7 +2,6 @@
 
 ![Build Status](https://github.com/stoically/radical/workflows/build/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/stoically/radical/badge.svg?branch=master)](https://coveralls.io/github/stoically/radical?branch=master)
-[![Riot Web Version](https://img.shields.io/badge/Riot%20Web%20Version-1.5.8-success)](https://github.com/vector-im/riot-web/releases)
 
 [Riot Web](https://github.com/vector-im/riot-web) bundled as Firefox Add-on.
 
