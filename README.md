@@ -7,7 +7,6 @@
 [Riot Web](https://github.com/vector-im/riot-web) bundled as Firefox Add-on.
 
 - Firefox AMO: https://addons.mozilla.org/firefox/addon/radical-web
-- Matrix Room: [#radical-webext:matrix.org](https://matrix.to/#/#radical-webext:matrix.org)
 
 ## Features
 
