@@ -21,6 +21,7 @@ export class Config {
         enable_presence_by_hs_url: {
           "https://matrix.org": false,
           "https://matrix-client.matrix.org": false,
+          "https://mozilla.modular.im": false,
         },
       }
     );
