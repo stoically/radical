@@ -7,7 +7,6 @@ import { Seshat } from "./seshat";
 
 export class Background extends Logger {
   public webappPath = "/riot/index.html";
-  public webappCreateHash: false | string = false;
   public manifest = browser.runtime.getManifest();
   public version = this.manifest.version;
   public browserType = this.manifest.applications?.gecko ? "firefox" : "chrome";
@@ -29,15 +28,6 @@ export class Background extends Logger {
       this.update.handleUpdateAvailable.bind(this.update)
     );
     browser.browserAction.onClicked.addListener(this.createTab.bind(this));
-
-    // thunderbird welcome.html fix
-    browser.runtime
-      .getBrowserInfo()
-      .then((info: browser.runtime.BrowserInfo) => {
-        if (info.name === "Thunderbird") {
-          this.webappCreateHash = "#/login";
-        }
-      });
   }
 
   initialize(): this {
@@ -107,12 +97,8 @@ export class Background extends Logger {
   async createTab(): Promise<browser.tabs.Tab> {
     const { debug } = this.logScope("createTab");
     debug("Creating riot tab");
-    let url = this.webappPath;
-    if (this.webappCreateHash) {
-      url += this.webappCreateHash;
-    }
     return browser.tabs.create({
-      url,
+      url: this.webappPath,
     });
   }
 }
