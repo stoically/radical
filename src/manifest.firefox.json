@@ -22,6 +22,9 @@
   },
   "permissions": ["contextualIdentities", "cookies", "storage"],
   "optional_permissions": ["webRequest", "<all_urls>"],
+  "web_accessible_resources": [
+    "riot/bundles/webext/usercontent.js"
+  ],
   "applications": {
     "gecko": {
       "id": "@riot-webext",
