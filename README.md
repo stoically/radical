@@ -61,7 +61,7 @@ npm run test
 
 ```shell
 # bump version in manifest.json
-./scripts/release.sh <version> [riot-web-version-tag]
+./scripts/release.sh
 ```
 
 ## Disclaimer
