@@ -103,20 +103,20 @@ if [[ $proceed != "y" && $proceed != "Y" ]]; then
 fi
 
 cd riot-web
-  #git push --force
+  git push --force
   git tag webext-$RELEASE_VERSION
-  #git push origin webext-$RELEASE_VERSION
+  git push origin webext-$RELEASE_VERSION
 cd ..
 
 cd matrix-react-sdk
-  #git push --force
+  git push --force
   git tag webext-$RELEASE_VERSION
-  #git push origin webext-$RELEASE_VERSION
+  git push origin webext-$RELEASE_VERSION
 cd ..
 
 git add riot-web matrix-* src/manifest.*
 git commit -S -m "chore(release): $RELEASE_VERSION"
-#git push
+git push
 git tag $RELEASE_VERSION
-#git push origin $RELEASE_VERSION
+git push origin $RELEASE_VERSION
 echo "Release successful"
