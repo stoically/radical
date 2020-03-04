@@ -11,6 +11,10 @@ if [[ -z $RIOT_WEB_VERSION_TAG ]]; then
   exit 1
 fi
 if [[ $RIOT_WEB_VERSION_TAG != "develop" ]]; then
+  if [[ ${RIOT_WEB_VERSION_TAG::1} != "v" ]]; then
+    echo "version tag must start with \"v\""
+    exit 1
+  fi
   REBASE_VERSION_TAG=$RIOT_WEB_VERSION_TAG
 else
   REBASE_VERSION_TAG="upstream/develop"
@@ -56,7 +60,6 @@ fi
 cd matrix-js-sdk
 git fetch
 git checkout $JS_SDK_VERSION_TAG
-git rebase
 cd ..
 
 echo "Rebase successful"
@@ -81,7 +84,7 @@ if [[ -z "$RELEASE_VERSION" ]]; then
   RELEASE_VERSION=${RIOT_WEB_VERSION_TAG:1}
 else
   if [[ ${RELEASE_VERSION::1} = "v" ]]; then
-    echo "version can not start with \"v\""
+    echo "version cannot start with \"v\""
     exit 1
   fi
 fi
