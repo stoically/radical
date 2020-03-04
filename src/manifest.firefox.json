@@ -19,11 +19,8 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "permissions": ["contextualIdentities", "cookies", "storage"],
-  "optional_permissions": ["webRequest", "<all_urls>"],
-  "web_accessible_resources": [
-    "riot/bundles/webext/usercontent.js"
-  ],
+  "web_accessible_resources": ["riot/bundles/webext/usercontent.js"],
+  "permissions": ["contextualIdentities", "cookies", "identity", "storage"],
   "applications": {
     "gecko": {
       "id": "@riot-webext",

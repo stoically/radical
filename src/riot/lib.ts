@@ -56,6 +56,7 @@ export const sanitize = (): void => {
     permissions: {
       request: browser.permissions.request,
     },
+    identity: browser.identity,
   };
   // @ts-ignore
   chrome = null;

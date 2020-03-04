@@ -2,7 +2,6 @@ import { Logger } from "../log";
 import { Message, MessageResponse } from "../types.js";
 import { Config } from "./config";
 import { Update } from "./update";
-import { SSO } from "./sso";
 import { Seshat } from "./seshat";
 
 export class Background extends Logger {
@@ -14,7 +13,6 @@ export class Background extends Logger {
 
   public config = new Config();
   public update = new Update(this);
-  public sso = new SSO();
   public seshat = new Seshat(this);
 
   constructor() {
@@ -81,13 +79,6 @@ export class Background extends Logger {
 
       case "config":
         return this.config.get();
-
-      case "ssoLogin":
-        return this.sso.handleLogin(
-          message.url,
-          message.responsePattern,
-          sender.tab.id
-        );
 
       case "seshat":
         return this.seshat.handleMessage(message, sender);

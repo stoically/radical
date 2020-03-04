@@ -33,7 +33,7 @@ browserTypes.map(browserType => {
       global.browser = global.chrome = browserFake();
       riot.sanitize();
 
-      expect(Object.keys(global.browser)).to.have.length(3);
+      expect(Object.keys(global.browser)).to.have.length(4);
       expect(global.chrome).to.be.null;
     });
 

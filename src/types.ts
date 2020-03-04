@@ -21,12 +21,6 @@ export interface MessageConfig {
   type: "config";
 }
 
-export interface MessageSsoLogin {
-  type: "ssoLogin";
-  url: string;
-  responsePattern: string;
-}
-
 export interface MessageSeshat {
   type: "seshat";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,7 +32,6 @@ export type Message =
   | MessageInstallUpdate
   | MessageActiveTab
   | MessageConfig
-  | MessageSsoLogin
   | MessageSeshat;
 
 export type MessageVersionResponse = string;
