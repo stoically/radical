@@ -91,7 +91,7 @@ fi
 
 MANIFEST_VERSION=$(jq -r '.version' src/manifest.firefox.json)
 if [[ "$MANIFEST_VERSION" != "$RELEASE_VERSION" ]]; then
-  echo "given version does not match manifest version"
+  echo "given version $RELEASE_VERSION does not match manifest version $MANIFEST_VERSION"
   exit 1
 fi
 
