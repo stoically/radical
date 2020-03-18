@@ -25,7 +25,7 @@
     }
   ```
 
-3. Reload Riot Add-on tab, go to "Settings > Security & Privacy", there you should see a "Manage" button under "Message search", clicking it should show [ongoing work](https://github.com/vector-im/riot-web/issues/12334)
+3. Reload Riot Add-on tab, go to "Settings > Security & Privacy", there you should see a "Manage" button under "Message search", clicking it should show ongoing work
 
 #### Troubleshooting
 
