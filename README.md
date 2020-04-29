@@ -2,7 +2,7 @@
 
 ![Build Status](https://github.com/stoically/radical/workflows/build/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/stoically/radical/badge.svg?branch=master)](https://coveralls.io/github/stoically/radical?branch=master)
-[![Radical Matrix room #radical-webext:matrix.org](https://img.shields.io/matrix/radical-webext:matrix.org.svg?label=%23radical-webext:matrix.org&logo=matrix&server_fqdn=matrix.org)](https://matrix.to/#/#radical-webext:matrix.org)
+[![Radical Matrix room #radical-webext:matrix.org](https://img.shields.io/badge/matrix-%23radical--webext%3Amatrix.org-blue)](https://matrix.to/#/#radical-webext:matrix.org)
 
 [Riot Web](https://github.com/vector-im/riot-web) bundled as Firefox Add-on.
 
