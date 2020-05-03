@@ -38,7 +38,7 @@ export { sinon, expect };
 
 global.beforeEach(() => {
   global.jsdom = new JSDOM(html);
-  global.window = global.jsdom.window;
+  global.window = (global.jsdom.window as unknown) as Window;
   global.document = global.jsdom.window.document;
 });
 

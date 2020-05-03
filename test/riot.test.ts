@@ -39,7 +39,7 @@ browserTypes.map(browserType => {
 
     it("#run", function() {
       const dom = new JSDOM(html);
-      global.window = dom.window;
+      global.window = (dom.window as unknown) as Window;
       global.document = dom.window.document;
       const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
       riot.run();

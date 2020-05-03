@@ -1,7 +1,6 @@
 /node_modules
 /build
 /dist
-/.cache
 /.nyc_output
 /coverage
 /reproducible/build
