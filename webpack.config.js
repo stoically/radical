@@ -51,7 +51,7 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build', 'firefox'),
   },
   plugins: [
     new MiniCssExtractPlugin(),
@@ -67,4 +67,9 @@ module.exports = {
       {from: 'riot-web/webapp', to: 'riot'},
     ]),
   ],
+  devServer: {
+    hot: false,
+    inline: false,
+    writeToDisk: true,
+  }
 };
