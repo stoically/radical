@@ -59,6 +59,7 @@ else
 fi
 cd matrix-js-sdk
 git fetch
+git fetch --tags
 git checkout $JS_SDK_VERSION_TAG
 cd ..
 
