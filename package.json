@@ -35,7 +35,8 @@
     "reproducible": "run-s reproducible:*",
     "reproducible:clean": "rimraf reproducible/build",
     "reproducible:build": "docker build -t riot-webext reproducible",
-    "reproducible:run": "docker run --rm -v $(pwd)/reproducible/build:/build -it riot-webext"
+    "reproducible:run": "docker run --rm -v $(pwd)/reproducible/build:/build -it riot-webext",
+    "pre-push": "run-s lint test build"
   },
   "dependencies": {
     "jsoneditor": "^8.6.6"

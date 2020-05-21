@@ -105,6 +105,8 @@ if [[ $proceed != "y" && $proceed != "Y" ]]; then
   exit 1
 fi
 
+npm run pre-push
+
 RELEASE_VERSION_TAG="v$RELEASE_VERSION"
 cd riot-web
   git push --force
