@@ -4,3 +4,4 @@
 /.nyc_output
 /coverage
 /reproducible/build
+.vscode
