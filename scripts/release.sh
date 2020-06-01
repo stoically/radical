@@ -55,7 +55,7 @@ cd ..
 if [[ $REBASE_VERSION_TAG != "upstream/develop" ]]; then
   JS_SDK_VERSION_TAG="v$(jq -r '.dependencies."matrix-js-sdk"' riot-web/package.json)"
 else
-  JS_SDK_VERSION_TAG="develop"
+  JS_SDK_VERSION_TAG="origin/develop"
 fi
 cd matrix-js-sdk
 git fetch
