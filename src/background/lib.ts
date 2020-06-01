@@ -42,10 +42,6 @@ export class Background extends Logger {
     const { debug } = this.logScope("handleInstalled");
     debug("onInstalled", details);
 
-    if (details.temporary) {
-      Logger.DEBUG = true;
-    }
-
     switch (details.reason) {
       case "install":
         debug("First install, opening Riot tab");

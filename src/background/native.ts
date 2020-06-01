@@ -2,6 +2,10 @@ import { Logger } from "~/log";
 import { Background } from "./lib";
 
 export class NativePort extends Logger {
+  public name =
+    process.env.NODE_ENV === "development"
+      ? "radical.native.dev"
+      : "radical.native";
   private port?: browser.runtime.Port;
   private rpcId = 0;
   private rpcPromises: Map<number, any> = new Map();
@@ -19,7 +23,7 @@ export class NativePort extends Logger {
     sender: browser.runtime.MessageSender
   ): Promise<any> {
     const { debug } = this.logScope("handleRuntimeMessage");
-    debug("message for radical.native received", message, "ready");
+    debug(`message for ${this.name} received`, message);
     if (!this.ready) {
       debug("port not ready, waiting 5s");
       // port not ready yet, give it 5s to change its mind
@@ -50,7 +54,7 @@ export class NativePort extends Logger {
   }
 
   private init(): void {
-    this.port = browser.runtime.connectNative("radical.native");
+    this.port = browser.runtime.connectNative(this.name);
     this.port.onDisconnect.addListener(this.handleDisconnect.bind(this));
     this.port.onMessage.addListener(this.handlePortMessage.bind(this));
   }
@@ -73,7 +77,7 @@ export class NativePort extends Logger {
         resolve,
         reject,
       });
-      debug("posting to radical.native", message);
+      debug(`posting to ${this.name}`, message);
       this.port?.postMessage(message);
     });
   }
@@ -115,13 +119,16 @@ export class NativePort extends Logger {
 
     if (port.error) {
       // handle error
+      // TODO error.message.includes("No such native application")
     }
 
     // TODO should get replaced with a button in the UI to retry,
     // to prevent spamming port connection tries
     debug("retrying port connection in 60s");
     setTimeout(() => {
-      this.init();
+      if (!this.ready) {
+        this.init();
+      }
     }, 60 * 1000);
   }
 }

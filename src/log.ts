@@ -5,7 +5,7 @@ interface ScopedLogger {
 }
 
 export class Logger {
-  static DEBUG = false;
+  static DEBUG = process.env.NODE_ENV === "development" ? true : false;
 
   logScope(scope: string | string[]): ScopedLogger {
     return {
