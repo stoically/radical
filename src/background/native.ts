@@ -19,17 +19,22 @@ export class NativePort extends Logger {
     sender: browser.runtime.MessageSender
   ): Promise<any> {
     const { debug } = this.logScope("handleRuntimeMessage");
-    debug("message for radical.native received", message, "ready", this.ready);
-    if (!this.ready) return false;
+    debug("message for radical.native received", message, "ready");
+    if (!this.ready) {
+      debug("port not ready, waiting 5s");
+      // port not ready yet, give it 5s to change its mind
+      await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+
+      if (!this.ready) {
+        debug("port not reachable, probably not installed");
+        return null;
+      }
+    }
 
     switch (message.type) {
       case "seshat":
         if (message.method === "supportsEventIndexing") {
-          if (!this.ready) {
-            // port not ready yet, give it 10s so it might flip to `true`
-            await new Promise(resolve => setTimeout(resolve, 10 * 1000));
-          }
-          return this.ready;
+          return true;
         }
 
         message.eventStore = `webext-${this.bg.runtimeURL.hostname}-${
@@ -112,6 +117,8 @@ export class NativePort extends Logger {
       // handle error
     }
 
+    // TODO should get replaced with a button in the UI to retry,
+    // to prevent spamming port connection tries
     debug("retrying port connection in 60s");
     setTimeout(() => {
       this.init();
