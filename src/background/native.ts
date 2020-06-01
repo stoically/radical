@@ -2,7 +2,7 @@ import { Logger } from "~/log";
 import { Background } from "./lib";
 
 export class NativePort extends Logger {
-  public name =
+  private name =
     process.env.NODE_ENV === "development"
       ? "radical.native.dev"
       : "radical.native";
