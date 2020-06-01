@@ -2,7 +2,7 @@ import { Logger } from "../log";
 import { Message, MessageResponse } from "../types.js";
 import { Config } from "./config";
 import { Update } from "./update";
-import { Seshat } from "./seshat";
+import { NativePort } from "./native";
 
 export class Background extends Logger {
   public webappPath = "/riot/index.html";
@@ -13,7 +13,7 @@ export class Background extends Logger {
 
   public config = new Config();
   public update = new Update(this);
-  public seshat = new Seshat(this);
+  public native = new NativePort(this);
 
   constructor() {
     super();
@@ -41,6 +41,11 @@ export class Background extends Logger {
   }): Promise<browser.tabs.Tab | undefined> {
     const { debug } = this.logScope("handleInstalled");
     debug("onInstalled", details);
+
+    if (details.temporary) {
+      Logger.DEBUG = true;
+    }
+
     switch (details.reason) {
       case "install":
         debug("First install, opening Riot tab");
@@ -81,7 +86,8 @@ export class Background extends Logger {
         return this.config.get();
 
       case "seshat":
-        return this.seshat.handleMessage(message, sender);
+      case "keytar":
+        return this.native.handleRuntimeMessage(message, sender);
     }
   }
 

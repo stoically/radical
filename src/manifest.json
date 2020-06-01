@@ -20,7 +20,13 @@
     "scripts": ["background.js"]
   },
   "web_accessible_resources": ["riot/bundles/webext/usercontent.js"],
-  "permissions": ["contextualIdentities", "cookies", "identity", "storage"],
+  "permissions": [
+    "contextualIdentities",
+    "cookies",
+    "identity",
+    "nativeMessaging",
+    "storage"
+  ],
   "applications": {
     "gecko": {
       "id": "@riot-webext",

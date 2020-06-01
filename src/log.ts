@@ -5,10 +5,14 @@ interface ScopedLogger {
 }
 
 export class Logger {
+  static DEBUG = false;
+
   logScope(scope: string | string[]): ScopedLogger {
     return {
       debug: (...args: any[]): void => {
-        return;
+        if (!Logger.DEBUG) {
+          return;
+        }
 
         console.log(
           `WebExtension::${this.constructor.name}::${scope}`,

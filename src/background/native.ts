@@ -1,20 +1,45 @@
 import { Logger } from "~/log";
+import { Background } from "./lib";
 
 export class NativePort extends Logger {
   private port?: browser.runtime.Port;
   private rpcId = 0;
   private rpcPromises: Map<number, any> = new Map();
   private ready = false;
+  private bg: Background;
 
-  constructor() {
+  constructor(bg: Background) {
     super();
+    this.bg = bg;
     this.init();
   }
 
-  async handleRuntimeMessage(message: any): Promise<any> {
+  async handleRuntimeMessage(
+    message: any,
+    sender: browser.runtime.MessageSender
+  ): Promise<any> {
     const { debug } = this.logScope("handleRuntimeMessage");
     debug("message for radical.native received", message, "ready", this.ready);
     if (!this.ready) return false;
+
+    switch (message.type) {
+      case "seshat":
+        if (message.method === "supportsEventIndexing") {
+          if (!this.ready) {
+            // port not ready yet, give it 10s so it might flip to `true`
+            await new Promise(resolve => setTimeout(resolve, 10 * 1000));
+          }
+          return this.ready;
+        }
+
+        message.eventStore = `webext-${this.bg.runtimeURL.hostname}-${
+          this.bg.browserType === "firefox"
+            ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              sender.tab!.cookieStoreId!
+            : "default"
+        }`;
+        break;
+    }
 
     return this.postPortMessage(message);
   }
