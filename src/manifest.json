@@ -25,7 +25,8 @@
     "cookies",
     "identity",
     "nativeMessaging",
-    "storage"
+    "storage",
+    "unlimitedStorage"
   ],
   "applications": {
     "gecko": {
