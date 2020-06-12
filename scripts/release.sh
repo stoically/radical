@@ -27,7 +27,6 @@ git submodule update
 cd riot-web
 git remote set-url origin git@github.com:stoically/riot-web.git
 git remote add upstream https://github.com/vector-im/riot-web.git || true
-git fetch upstream
 git fetch upstream --tags
 git checkout webext-develop
 PATCH_COMMIT=$(git rev-parse webext-develop)
@@ -45,7 +44,6 @@ fi
 cd matrix-react-sdk
 git remote set-url origin git@github.com:stoically/matrix-react-sdk.git
 git remote add upstream https://github.com/matrix-org/matrix-react-sdk.git || true
-git fetch upstream
 git fetch upstream --tags
 git checkout webext-develop
 PATCH_COMMIT=$(git rev-parse webext-develop)
@@ -60,7 +58,6 @@ else
   JS_SDK_VERSION_TAG="origin/develop"
 fi
 cd matrix-js-sdk
-git fetch
 git fetch --tags
 git checkout $JS_SDK_VERSION_TAG
 cd ..
