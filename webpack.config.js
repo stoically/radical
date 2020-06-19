@@ -60,12 +60,14 @@ module.exports = {
       filename: 'options.html',
       chunks: ['options'],
     }),
-    new CopyPlugin([
-      'LICENSE',
-      'src/manifest.json',
-      {from: 'src/vector-icons', to: 'vector-icons'},
-      {from: 'riot-web/webapp', to: 'riot'},
-    ]),
+    new CopyPlugin({
+      patterns: [
+        'LICENSE',
+        'src/manifest.json',
+        {from: 'src/vector-icons', to: 'vector-icons'},
+        {from: 'riot-web/webapp', to: 'riot'},
+      ]
+    }),
   ],
   devServer: {
     hot: false,
