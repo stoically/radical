@@ -59,7 +59,7 @@ else
 fi
 cd matrix-js-sdk
 git fetch --tags
-git checkout $JS_SDK_VERSION_TAG
+git rebase $JS_SDK_VERSION_TAG
 cd ..
 
 echo "Rebase successful"
