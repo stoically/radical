@@ -70,7 +70,6 @@ export class NativePort extends Logger {
     const { debug } = this.logScope("postMessage");
     return new Promise((resolve, reject) => {
       this.rpcId++;
-      // eslint-disable-next-line @typescript-eslint/camelcase
       message.rpcId = this.rpcId;
       this.rpcPromises.set(this.rpcId, {
         message,

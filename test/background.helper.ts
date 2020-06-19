@@ -11,7 +11,7 @@ import { listener as riotListener } from "~/riot/lib";
 interface Manifest {
   version: string;
   applications?: {
-    gecko?: {};
+    gecko?: unknown;
   };
 }
 

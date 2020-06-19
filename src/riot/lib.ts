@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { injectScript } from "~/utils";
 import { Logger } from "~/log";
 import { BrowserType } from "~/types";
@@ -64,7 +64,6 @@ export const sanitize = (): void => {
 
 export const run = async (): Promise<void> => {
   // run riot
-  // eslint-disable-next-line @typescript-eslint/camelcase
   window.vector_indexeddb_worker_script = "bundles/webext/indexeddb-worker.js";
   await Promise.all(
     ["bundles/webext/vendor.js", "bundles/webext/bundle.js"].map(injectScript)

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { RiotConfig } from "~/types";
 
 export class Config {
