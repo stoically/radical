@@ -39,7 +39,7 @@
     "pre-push": "run-s lint test build"
   },
   "dependencies": {
-    "jsoneditor": "^8.6.6"
+    "jsoneditor": "^9.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
