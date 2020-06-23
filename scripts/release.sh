@@ -58,8 +58,8 @@ else
   JS_SDK_VERSION_TAG="origin/develop"
 fi
 cd matrix-js-sdk
-git fetch --tags
-git rebase $JS_SDK_VERSION_TAG
+git pull
+git checkout $JS_SDK_VERSION_TAG
 cd ..
 
 echo "Rebase successful"
