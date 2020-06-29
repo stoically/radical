@@ -58,7 +58,7 @@ else
   JS_SDK_VERSION_TAG="origin/develop"
 fi
 cd matrix-js-sdk
-git pull
+git fetch
 git checkout $JS_SDK_VERSION_TAG
 cd ..
 
