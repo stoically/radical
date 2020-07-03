@@ -105,7 +105,9 @@ if [[ $proceed != "y" && $proceed != "Y" ]]; then
   exit 1
 fi
 
+git stash -u
 git pull
+git stash pop
 
 npm run pre-push
 
