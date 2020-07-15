@@ -8,7 +8,6 @@ import { BackgroundHelper } from "./background.helper";
 declare global {
   namespace NodeJS {
     interface Global {
-      browser: BrowserFake;
       window: Window;
       document: any;
       chrome: any;

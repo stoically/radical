@@ -30,7 +30,8 @@ browserTypes.map(browserType => {
     });
 
     it("#sanitize", function() {
-      global.browser = global.chrome = browserFake();
+      // eslint-disable-next-line no-restricted-globals
+      global.browser = global.chrome = (browserFake() as unknown) as typeof browser;
       riot.sanitize();
 
       expect(Object.keys(global.browser)).to.have.length(4);
@@ -39,7 +40,7 @@ browserTypes.map(browserType => {
 
     it("#run", function() {
       const dom = new JSDOM(html);
-      global.window = (dom.window as unknown) as Window;
+      global.window = dom.window as Window & typeof globalThis;
       global.document = dom.window.document;
       const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
       riot.run();
@@ -58,13 +59,15 @@ browserTypes.map(browserType => {
     it("#initialize", async function() {
       const injectScriptStub = ImportMock.mockFunction(utils, "injectScript");
       injectScriptStub.callsFake(() => {
-        global.browser = browserFake();
+        // eslint-disable-next-line no-restricted-globals
+        global.browser = (browserFake() as unknown) as typeof browser;
       });
       const sanitizeStub = ImportMock.mockFunction(riot, "sanitize");
       const listenerStub = ImportMock.mockFunction(riot, "listener");
       const runStub = ImportMock.mockFunction(riot, "run");
       if (browserType === "firefox") {
-        global.browser = browserFake();
+        // eslint-disable-next-line no-restricted-globals
+        global.browser = (browserFake() as unknown) as typeof browser;
       }
 
       await riot.initialize();

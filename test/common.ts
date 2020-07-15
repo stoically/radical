@@ -19,7 +19,7 @@ export const browserTypes = !process.env.BROWSER_TYPE
 
 export const sendMessage = (
   browser: BrowserFake,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   message: any,
   sender?: browser.runtime.MessageSender
 ): MessageResponse => {
@@ -38,7 +38,7 @@ export { sinon, expect };
 
 global.beforeEach(() => {
   global.jsdom = new JSDOM(html);
-  global.window = (global.jsdom.window as unknown) as Window;
+  global.window = global.jsdom.window as Window & typeof globalThis;
   global.document = global.jsdom.window.document;
 });
 

@@ -1,18 +1,18 @@
 /* eslint-disable */
-const path = require('path');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require("path");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: {
-    background: './src/background.ts',
-    riot: './src/riot.ts',
-    options: './src/ui/options.ts',
+    background: "./src/background.ts",
+    riot: "./src/riot.ts",
+    options: "./src/ui/options.ts",
   },
   devtool: false,
-  mode: 'production',
+  mode: "production",
   performance: {
     hints: false,
   },
@@ -21,7 +21,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        loader: 'ts-loader',
+        loader: "ts-loader",
         exclude: /node_modules/,
         options: {
           appendTsSuffixTo: [/\.vue$/],
@@ -29,11 +29,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.svg$/,
-        loader: 'file-loader',
+        loader: "file-loader",
       },
     ],
   },
@@ -41,35 +41,37 @@ module.exports = {
     minimize: false,
     splitChunks: {
       chunks: chunk => {
-        return ['options', 'riot'].includes(chunk.name);
+        return ["options", "riot"].includes(chunk.name);
       },
     },
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: [".ts", ".js"],
     plugins: [new TsconfigPathsPlugin()],
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'build', 'firefox'),
+    filename: "[name].js",
+    path: path.resolve(__dirname, "build", "firefox"),
   },
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/ui/options.html',
-      filename: 'options.html',
-      chunks: ['options'],
+      template: "src/ui/options.html",
+      filename: "options.html",
+      chunks: ["options"],
     }),
-    new CopyPlugin([
-      'LICENSE',
-      'src/manifest.json',
-      {from: 'src/vector-icons', to: 'vector-icons'},
-      {from: 'riot-web/webapp', to: 'riot'},
-    ]),
+    new CopyPlugin({
+      patterns: [
+        "LICENSE",
+        "src/manifest.json",
+        { from: "src/vector-icons", to: "vector-icons" },
+        { from: "riot-web/webapp", to: "riot" },
+      ],
+    }),
   ],
   devServer: {
     hot: false,
     inline: false,
     writeToDisk: true,
-  }
+  },
 };

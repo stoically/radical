@@ -46,9 +46,7 @@ browserTypes.map(browserType => {
 
       await expect(
         this.browser.storage.local.get("update")
-      ).to.eventually.deep.equal({
-        update: undefined,
-      });
+      ).to.eventually.deep.equal({});
 
       expect(
         this.browser.storage.local.remove

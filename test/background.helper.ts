@@ -39,7 +39,7 @@ export class BackgroundHelper {
     context.browser.windows.getAll.resolves([
       { id: context.browser.windows.WINDOW_ID_CURRENT },
     ]);
-    context.browser.runtime.sendMessage.callsFake((...args) => {
+    context.browser.runtime.sendMessage.callsFake((...args: unknown[]) => {
       context.riot.runtime.onMessage.addListener.yield(...args);
     });
     context.riot.runtime.sendMessage.callsFake(async (...args) => {
@@ -48,7 +48,8 @@ export class BackgroundHelper {
       }
       context.browser.runtime.onMessage.addListener.yield(...args);
     });
-    global.browser = context.browser;
+    // eslint-disable-next-line no-restricted-globals
+    global.browser = (context.browser as unknown) as typeof browser;
     context.background = new Background();
 
     this.context = context;
