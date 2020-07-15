@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
  - Browser [e.g. firefox]
  - Browser Version [e.g. 71]
- - Riot WebExtension Version [e.g. 1.5.7.1]
+ - Radical Add-on Version [e.g. 1.7.0]
 
 **Additional context**
 Add any other context about the problem here.

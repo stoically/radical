@@ -4,20 +4,20 @@
 [![Coverage Status](https://coveralls.io/repos/github/stoically/radical/badge.svg?branch=master)](https://coveralls.io/github/stoically/radical?branch=master)
 [![Radical Matrix room #radical-webext:matrix.org](https://img.shields.io/badge/matrix-%23radical--webext%3Amatrix.org-blue)](https://matrix.to/#/#radical-webext:matrix.org)
 
-[Riot Web](https://github.com/vector-im/riot-web) bundled as Firefox Add-on.
+[Element](https://github.com/vector-im/riot-web) (Riot Web) bundled as Firefox Add-on.
 
 - Firefox AMO: https://addons.mozilla.org/firefox/addon/radical-web
 
 ## Features
 
-- Riot Web served entirely locally without the need for additional setup
-- Ability to edit Riot Web's "config.json" in the Add-on preferences
+- Element (Riot Web) served entirely locally without the need for additional setup
+- Ability to edit Element's "config.json" in the Add-on preferences
 - Search in encrypted rooms using [Radical Native](https://github.com/stoically/radical-native#readme)
 
 ### Search
 
 1. Install [Radical Native](https://github.com/stoically/radical-native#install) (the Add-on is not required)
-2. Reload Riot Add-on tab, go to "Settings > Security & Privacy", there you should see a "Manage" button under "Message search", clicking it should show ongoing work
+2. Reload Radical Add-on tab, go to "Settings > Security & Privacy", there you should see a "Manage" button under "Message search", clicking it should show ongoing work
 
 #### Troubleshooting
 
@@ -26,7 +26,7 @@
 
 ## Development
 
-[yarn](https://yarnpkg.com/) is required to build riot-web.
+[yarn](https://yarnpkg.com/) is required to build element.
 
 ```shell
 npm install
@@ -57,4 +57,4 @@ npm run test
 
 ## Disclaimer
 
-Not an official project from [New Vector](https://vector.im/)!
+Not an official project from [Element](https://element.io/)!
