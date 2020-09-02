@@ -2,7 +2,7 @@
   "description": "Own your conversations",
   "manifest_version": 2,
   "name": "Radical",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "icons": {
     "48": "vector-icons/riot48.png",
     "96": "vector-icons/riot96.png"
