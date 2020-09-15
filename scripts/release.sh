@@ -33,6 +33,7 @@ PATCH_COMMIT=$(git rev-parse webext-develop)
 echo "riot-web patch commit: $PATCH_COMMIT"
 git reset --hard $REBASE_VERSION_TAG
 git cherry-pick -S $PATCH_COMMIT
+rm -rf package-lock.json node_modules
 npm i
 cd ..
 
@@ -51,6 +52,7 @@ PATCH_COMMIT=$(git rev-parse webext-develop)
 echo "matrix-react-sdk patch commit: $PATCH_COMMIT"
 git reset --hard $REACT_SDK_VERSION_TAG
 git cherry-pick -S $PATCH_COMMIT
+rm -rf package-lock.json node_modules
 npm i
 cd ..
 
@@ -62,6 +64,7 @@ fi
 cd matrix-js-sdk
 git fetch
 git checkout $JS_SDK_VERSION_TAG
+rm -rf package-lock.json node_modules
 npm i
 cd ..
 
